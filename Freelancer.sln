@@ -1,0 +1,47 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40418.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{FE3BF988-6ECE-48CA-AAFE-8C237CF0A16B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{6A74649E-6C9E-45A9-968A-8EE5A192025E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External libraries", "External libraries", "{45D80F9C-FABF-4C2F-A3C7-2E96AF127528}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{FA18E97B-CC9F-43EE-BD57-B036499FEF5B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Freelancer.Data", "Freelancer.Data\Freelancer.Data.csproj", "{3D3ACF69-9B8F-4644-A55F-34300A323AEE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Freelancer.Models", "Freelancer.Models\Freelancer.Models.csproj", "{89B02590-FA2C-418A-BE6B-42F0336A34F5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Freelancer.MVC", "Freelancer.MVC\Freelancer.MVC.csproj", "{A42E6F4F-6C74-4DB4-AAEB-4ED6AF0303E8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3D3ACF69-9B8F-4644-A55F-34300A323AEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D3ACF69-9B8F-4644-A55F-34300A323AEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D3ACF69-9B8F-4644-A55F-34300A323AEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D3ACF69-9B8F-4644-A55F-34300A323AEE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89B02590-FA2C-418A-BE6B-42F0336A34F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89B02590-FA2C-418A-BE6B-42F0336A34F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89B02590-FA2C-418A-BE6B-42F0336A34F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89B02590-FA2C-418A-BE6B-42F0336A34F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A42E6F4F-6C74-4DB4-AAEB-4ED6AF0303E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A42E6F4F-6C74-4DB4-AAEB-4ED6AF0303E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A42E6F4F-6C74-4DB4-AAEB-4ED6AF0303E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A42E6F4F-6C74-4DB4-AAEB-4ED6AF0303E8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3D3ACF69-9B8F-4644-A55F-34300A323AEE} = {FE3BF988-6ECE-48CA-AAFE-8C237CF0A16B}
+		{89B02590-FA2C-418A-BE6B-42F0336A34F5} = {FE3BF988-6ECE-48CA-AAFE-8C237CF0A16B}
+		{A42E6F4F-6C74-4DB4-AAEB-4ED6AF0303E8} = {6A74649E-6C9E-45A9-968A-8EE5A192025E}
+	EndGlobalSection
+EndGlobal
