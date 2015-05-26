@@ -42,11 +42,11 @@ namespace Freelancer.Models
 
         [DefaultValue(0)]
         [Range(0, 10000)]
-        public int Experience { get; set; }
+        public int? Experience { get; set; }
 
         [DefaultValue(1)]
         [Range(1, 100)]
-        public int Level { get; set; }
+        public int? Level { get; set; }
 
         public virtual ICollection<Project> BiddingProjects
         {

@@ -8,17 +8,22 @@ using System.Web;
 using System.Web.Mvc;
 using Freelancer.Data;
 using Freelancer.Models;
+using Freelancer.Data.UnitOfWork;
 
 namespace Freelancer.MVC.Controllers
 {
-    public class SkillsController : Controller
+    public class SkillsController : BaseController
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+        
+        public SkillsController(IFreelancerData data)
+            :base(data)
+        {
+        }
 
         // GET: Skills
         public ActionResult Index()
         {
-            return View(db.Skills.ToList());
+            return View(Data.Skills.All().ToList());
         }
 
         // GET: Skills/Details/5
@@ -28,7 +33,7 @@ namespace Freelancer.MVC.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Skill skill = db.Skills.Find(id);
+            Skill skill = Data.Skills.Find(id);
             if (skill == null)
             {
                 return HttpNotFound();
@@ -51,8 +56,8 @@ namespace Freelancer.MVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Skills.Add(skill);
-                db.SaveChanges();
+                Data.Skills.Add(skill);
+                Data.SaveChanges();
                 return RedirectToAction("Index");
             }
 
@@ -66,7 +71,7 @@ namespace Freelancer.MVC.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Skill skill = db.Skills.Find(id);
+            Skill skill = Data.Skills.Find(id);
             if (skill == null)
             {
                 return HttpNotFound();
@@ -83,8 +88,8 @@ namespace Freelancer.MVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(skill).State = EntityState.Modified;
-                db.SaveChanges();
+                this.Data.Skills.Update(skill);
+                Data.SaveChanges();
                 return RedirectToAction("Index");
             }
             return View(skill);
@@ -97,7 +102,7 @@ namespace Freelancer.MVC.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Skill skill = db.Skills.Find(id);
+            Skill skill = Data.Skills.Find(id);
             if (skill == null)
             {
                 return HttpNotFound();
@@ -110,19 +115,19 @@ namespace Freelancer.MVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Skill skill = db.Skills.Find(id);
-            db.Skills.Remove(skill);
-            db.SaveChanges();
+            Skill skill = Data.Skills.Find(id);
+            Data.Skills.Delete(skill);
+            Data.SaveChanges();
             return RedirectToAction("Index");
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
+        //protected override void Dispose(bool disposing)
+        //{
+        //    if (disposing)
+        //    {
+        //        db.Dispose();
+        //    }
+        //    base.Dispose(disposing);
+        //}
     }
 }

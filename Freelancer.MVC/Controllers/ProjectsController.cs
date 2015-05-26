@@ -8,17 +8,23 @@ using System.Web;
 using System.Web.Mvc;
 using Freelancer.Data;
 using Freelancer.Models;
+using Freelancer.Data.UnitOfWork;
 
 namespace Freelancer.MVC.Controllers
 {
-    public class ProjectsController : Controller
+    public class ProjectsController : BaseController
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+
+        public ProjectsController(IFreelancerData data)
+            :base(data)
+        {
+        }
+
 
         // GET: Projects
         public ActionResult Index()
         {
-            return View(db.Projects.ToList());
+            return View(this.Data.Projects.All().ToList());
         }
 
         // GET: Projects/Details/5
@@ -28,7 +34,7 @@ namespace Freelancer.MVC.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Project project = db.Projects.Find(id);
+            Project project = this.Data.Projects.Find(id);
             if (project == null)
             {
                 return HttpNotFound();
@@ -51,8 +57,8 @@ namespace Freelancer.MVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Projects.Add(project);
-                db.SaveChanges();
+                Data.Projects.Add(project);
+                Data.SaveChanges();
                 return RedirectToAction("Index");
             }
 
@@ -66,7 +72,7 @@ namespace Freelancer.MVC.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Project project = db.Projects.Find(id);
+            Project project = this.Data.Projects.Find(id);
             if (project == null)
             {
                 return HttpNotFound();
@@ -83,8 +89,8 @@ namespace Freelancer.MVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(project).State = EntityState.Modified;
-                db.SaveChanges();
+                this.Data.Projects.Update(project);
+                this.Data.SaveChanges();
                 return RedirectToAction("Index");
             }
             return View(project);
@@ -97,7 +103,7 @@ namespace Freelancer.MVC.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Project project = db.Projects.Find(id);
+            Project project = this.Data.Projects.Find(id);
             if (project == null)
             {
                 return HttpNotFound();
@@ -110,19 +116,19 @@ namespace Freelancer.MVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Project project = db.Projects.Find(id);
-            db.Projects.Remove(project);
-            db.SaveChanges();
+            Project project = this.Data.Projects.Find(id);
+            Data.Projects.Delete(project);
+            Data.SaveChanges();
             return RedirectToAction("Index");
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
+        //protected override void Dispose(bool disposing)
+        //{
+        //    if (disposing)
+        //    {
+        //        db.Dispose();
+        //    }
+        //    base.Dispose(disposing);
+        //}
     }
 }
