@@ -19,6 +19,7 @@ ASP.NET MVC Project
 -	updated getters "Data" and "UserProfile" in BaseController.
 -	removed "CheckUsername" from "HomeController" because there is internal checker for allready exists username
 -	migrations set in HomeController's constructor
+-	seed with exams, questions and skills
 
 IMPORTANT:
 If you recive AspNetUsers allready exists. Just type:
