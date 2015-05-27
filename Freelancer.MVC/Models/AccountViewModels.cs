@@ -66,7 +66,7 @@ namespace Freelancer.MVC.Models
     {
         [Required]
         [Display(Name = "Username")]
-        [System.Web.Mvc.Remote("CheckUsername","Home", ErrorMessage = "Name Already Exists")]
+        // [System.Web.Mvc.Remote("CheckUsername", "Home", ErrorMessage = "Name Already Exists")]
         public string Username { get; set; }
 
         [Required]

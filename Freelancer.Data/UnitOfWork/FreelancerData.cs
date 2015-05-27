@@ -1,14 +1,11 @@
 ﻿namespace Freelancer.Data.UnitOfWork
 {
-
     using Freelancer.Data;
     using Freelancer.Data.Repositories;
     using Freelancer.Models;
     using System;
     using System.Collections.Generic;
-    using System.Data.Entity;
-
-
+    
     public class FreelancerData : IFreelancerData
     {
         private ApplicationDbContext context;
