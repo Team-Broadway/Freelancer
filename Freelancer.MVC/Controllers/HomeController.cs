@@ -21,6 +21,20 @@ namespace Freelancer.MVC.Controllers
             return View();
         }
 
+<<<<<<< .mine
+        public JsonResult CheckUsername(string Username)
+        {
+            bool userExists = this.Data.Users.All().Any(u => u.UserName == Username);
+            if(userExists)
+            {
+                return Json(false,JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(true, JsonRequestBehavior.AllowGet);
+            }
+        }
+=======
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";
@@ -34,5 +48,6 @@ namespace Freelancer.MVC.Controllers
 
             return View();
         }
+>>>>>>> .r10
     }
 }
