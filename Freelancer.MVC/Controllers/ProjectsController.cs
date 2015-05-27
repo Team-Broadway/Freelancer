@@ -1,22 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Linq;
-using System.Net;
-using System.Web;
-using System.Web.Mvc;
-using Freelancer.Data;
-using Freelancer.Models;
-using Freelancer.Data.UnitOfWork;
-
+﻿
 namespace Freelancer.MVC.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Data.Entity;
+    using System.Linq;
+    using System.Net;
+    using System.Web;
+    using System.Web.Mvc;
+    using Freelancer.Data;
+    using Freelancer.Models;
+    using Freelancer.Data.UnitOfWork;
+    using Freelancer.MVC.Extensions;
     public class ProjectsController : BaseController
     {
 
         public ProjectsController(IFreelancerData data)
-            :base(data)
+            : base(data)
         {
         }
 
@@ -26,6 +27,14 @@ namespace Freelancer.MVC.Controllers
         {
             return View(this.Data.Projects.All().ToList());
         }
+
+        [Authorize(Roles = "Admin")]
+        public ActionResult List()
+        {
+            return View(this.Data.Projects.All().ToList());
+
+        }
+
 
         // GET: Projects/Details/5
         public ActionResult Details(int? id)
@@ -40,6 +49,13 @@ namespace Freelancer.MVC.Controllers
                 return HttpNotFound();
             }
             return View(project);
+        }
+
+        [Authorize(Roles = "Admin")]
+        public ActionResult DetailsForAdmin(int id)
+        {
+            Project project = this.Data.Projects.Find(id);
+            return View("Details", project);
         }
 
         // GET: Projects/Create
@@ -59,6 +75,7 @@ namespace Freelancer.MVC.Controllers
             {
                 Data.Projects.Add(project);
                 Data.SaveChanges();
+                this.AddNotification("Project created.", NotificationType.SUCCESS);
                 return RedirectToAction("Index");
             }
 
@@ -91,6 +108,7 @@ namespace Freelancer.MVC.Controllers
             {
                 this.Data.Projects.Update(project);
                 this.Data.SaveChanges();
+                this.AddNotification("Project edited.", NotificationType.SUCCESS);
                 return RedirectToAction("Index");
             }
             return View(project);
@@ -119,16 +137,8 @@ namespace Freelancer.MVC.Controllers
             Project project = this.Data.Projects.Find(id);
             Data.Projects.Delete(project);
             Data.SaveChanges();
+            this.AddNotification("Project deleted.", NotificationType.SUCCESS);
             return RedirectToAction("Index");
         }
-
-        //protected override void Dispose(bool disposing)
-        //{
-        //    if (disposing)
-        //    {
-        //        db.Dispose();
-        //    }
-        //    base.Dispose(disposing);
-        //}
     }
 }

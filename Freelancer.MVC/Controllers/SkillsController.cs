@@ -1,17 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Linq;
-using System.Net;
-using System.Web;
-using System.Web.Mvc;
-using Freelancer.Data;
-using Freelancer.Models;
-using Freelancer.Data.UnitOfWork;
+﻿
 
 namespace Freelancer.MVC.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Data.Entity;
+    using System.Linq;
+    using System.Net;
+    using System.Web;
+    using System.Web.Mvc;
+    using Freelancer.Data;
+    using Freelancer.Models;
+    using Freelancer.Data.UnitOfWork;
+    using Freelancer.MVC.Extensions;
     public class SkillsController : BaseController
     {
         
@@ -58,6 +60,7 @@ namespace Freelancer.MVC.Controllers
             {
                 Data.Skills.Add(skill);
                 Data.SaveChanges();
+                this.AddNotification("Skill created.", NotificationType.SUCCESS);
                 return RedirectToAction("Index");
             }
 
@@ -90,6 +93,7 @@ namespace Freelancer.MVC.Controllers
             {
                 this.Data.Skills.Update(skill);
                 Data.SaveChanges();
+                this.AddNotification("Skill edited successfully.", NotificationType.SUCCESS);
                 return RedirectToAction("Index");
             }
             return View(skill);
@@ -118,16 +122,8 @@ namespace Freelancer.MVC.Controllers
             Skill skill = Data.Skills.Find(id);
             Data.Skills.Delete(skill);
             Data.SaveChanges();
+            this.AddNotification("Skill deleted successfully.", NotificationType.SUCCESS);
             return RedirectToAction("Index");
         }
-
-        //protected override void Dispose(bool disposing)
-        //{
-        //    if (disposing)
-        //    {
-        //        db.Dispose();
-        //    }
-        //    base.Dispose(disposing);
-        //}
-    }
+            }
 }
