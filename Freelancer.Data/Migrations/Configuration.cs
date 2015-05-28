@@ -1,3 +1,5 @@
+using Microsoft.AspNet.Identity;
+
 namespace Freelancer.Data.Migrations
 {
     using System;
@@ -81,6 +83,12 @@ namespace Freelancer.Data.Migrations
             };
             
             context.Roles.Add(userRole);
+
+            var userStore = new UserStore<User>(context);
+            var userManager = new UserManager<User>(userStore);
+
+            userManager.AddToRole(dbonevUser.Id, "Administrator");
+            userManager.AddToRole(kiborkUser.Id, "User");
 
             context.SaveChanges();
         }
