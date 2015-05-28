@@ -1,8 +1,7 @@
-using System.Linq;
-using Freelancer.Models;
-
 namespace Freelancer.Data.Migrations
 {
+    using System.Linq;
+    using Freelancer.Models;
     using System.Data.Entity.Migrations;
 
     public sealed class Configuration : DbMigrationsConfiguration<ApplicationDbContext>
