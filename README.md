@@ -30,3 +30,4 @@ in package manager console
 28.05.2015:
 -	Added route User/username
 -	Added simple example in UsersController
+-	Added roles: Administrator, Moderator and User
