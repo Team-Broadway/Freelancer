@@ -1,8 +1,11 @@
 namespace Freelancer.Data.Migrations
 {
-    using System.Linq;
-    using Freelancer.Models;
+    using System;
+    using System.Data.Entity;
     using System.Data.Entity.Migrations;
+    using Freelancer.Models;
+    using Microsoft.AspNet.Identity.EntityFramework;
+    using System.Linq;
 
     public sealed class Configuration : DbMigrationsConfiguration<ApplicationDbContext>
     {
@@ -28,8 +31,8 @@ namespace Freelancer.Data.Migrations
 
             context.Exams.Add(DOTNETExam);
 
-            var dbonevUser = context.Users.Where(x => x.UserName == "dbonev").FirstOrDefault();
-            var kiborkUser = context.Users.Where(x => x.UserName == "Kibork").FirstOrDefault();
+            var dbonevUser = context.Users.FirstOrDefault(x => x.UserName == "dbonev");
+            var kiborkUser = context.Users.FirstOrDefault(x => x.UserName == "Kibork");
 
             OOPExam.Employees.Add(dbonevUser);
             DOTNETExam.Employees.Add(kiborkUser);
@@ -45,18 +48,39 @@ namespace Freelancer.Data.Migrations
             {
                 Exam = DOTNETExam,
                 Name = ".NET",
-                Users = {kiborkUser}
+                Users = { kiborkUser }
             };
 
             var OOPSkill = new Skill
             {
                 Exam = OOPExam,
                 Name = "OOP",
-                Users = {dbonevUser}
+                Users = { dbonevUser }
             };
 
             context.Skills.Add(dotNETSkill);
             context.Skills.Add(OOPSkill);
+
+            var admRole = new IdentityRole
+            {
+                Name = "Administrator"
+            };
+
+            context.Roles.Add(admRole);
+
+            var modRole = new IdentityRole
+            {
+                Name = "Moderator"
+            };
+
+            context.Roles.Add(modRole);
+
+            var userRole = new IdentityRole
+            {
+                Name = "User"
+            };
+            
+            context.Roles.Add(userRole);
 
             context.SaveChanges();
         }

@@ -8,13 +8,12 @@ namespace Freelancer.Data
     using Freelancer.Models;
     using Freelancer.Data.Migrations;
 
-
     public class ApplicationDbContext : IdentityDbContext<User>, IApplicationDbContext
     {
         public ApplicationDbContext()
             : base("DefaultConnection")
         {
-            Database.SetInitializer(new MigrateDatabaseToLatestVersion<ApplicationDbContext, Configuration>());
+            // Database.SetInitializer(new MigrateDatabaseToLatestVersion<ApplicationDbContext, Configuration>());
         }
 
         public static ApplicationDbContext Create()
@@ -82,6 +81,5 @@ namespace Freelancer.Data
         public IDbSet<Skill> Skills { get; set; }
 
         public IDbSet<Notification> Notifications { get; set; }
-
     }
 }

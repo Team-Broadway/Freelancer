@@ -1,10 +1,10 @@
-﻿using Freelancer.MVC.Models;
-
-namespace Freelancer.MVC.Controllers
+﻿namespace Freelancer.MVC.Controllers
 {
     using System.Linq;
     using System.Web.Mvc;
     using Freelancer.Data.UnitOfWork;
+    using System;
+    using Freelancer.MVC.Models;
 
     public class UsersController : BaseController
     {
@@ -18,17 +18,16 @@ namespace Freelancer.MVC.Controllers
         {
             var user = this.Data.Users
                 .All()
-                .FirstOrDefault(x => x.UserName == username);
+                .Where(x => x.UserName == username)
+                .Select(ProfileViewModel.ViewModel)
+                .FirstOrDefault();
 
-            var outputUser = new ProfileViewModel
+            if (user == null)
             {
-                Username = user.UserName,
-                FullName = user.FullName,
-                Info = user.Info,
-                AvatarUrl = user.AvatarUrl
-            };
+                return this.HttpNotFound(String.Format("User \"{0}\" doesn't exists!", username));
+            }
 
-            return this.View(outputUser);
+            return this.View(user);
         }
     }
 }
