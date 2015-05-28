@@ -25,3 +25,7 @@ IMPORTANT:
 If you recive AspNetUsers allready exists. Just type:
 	"update-database -Verbose"
 in package manager console
+
+28.05.2015:
+-	Added route User/username
+-	Added simple example in UsersController
