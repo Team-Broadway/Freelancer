@@ -23,7 +23,8 @@ ASP.NET MVC Project
 
 IMPORTANT:
 If you recive AspNetUsers allready exists. Just type:
-	"update-database -Verbose"
+-	Add-Migration InitialMigrations -IgnoreChanges
+-	update-database -Verbose
 in package manager console
 
 28.05.2015:
