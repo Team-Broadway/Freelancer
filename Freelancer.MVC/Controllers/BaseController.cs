@@ -1,4 +1,7 @@
-﻿namespace Freelancer.MVC.Controllers
+﻿using System.Data.Entity.Core.Common.EntitySql;
+using Microsoft.AspNet.Identity;
+
+namespace Freelancer.MVC.Controllers
 {
     using Freelancer.Data.UnitOfWork;
     using Freelancer.Models;
@@ -50,6 +53,26 @@
             }
 
             return base.BeginExecute(requestContext, callback, state);
+        }
+
+        private string CurrentUserId()
+        {
+            var userId = this.User.Identity.GetUserId();
+            return userId;
+        }
+
+        public bool IsAdmin()
+        {
+            var isAdmin = (CurrentUserId() != null && this.User.IsInRole("Administrator"));
+
+            return isAdmin;
+        }
+
+        public bool IsModerator()
+        {
+            var isModerator = (CurrentUserId() != null && this.User.IsInRole("Moderator"));
+
+            return isModerator;
         }
     }
 }

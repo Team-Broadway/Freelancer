@@ -84,6 +84,16 @@ namespace Freelancer.Data.Migrations
             
             context.Roles.Add(userRole);
 
+            dbonevUser.Skills.Add(OOPSkill);
+            dbonevUser.Skills.Add(dotNETSkill);
+
+            kiborkUser.Skills.Add(dotNETSkill);
+
+            OOPExam.Employees.Add(dbonevUser);
+            DOTNETExam.Employees.Add(dbonevUser);
+
+            DOTNETExam.Employees.Add(kiborkUser);
+
             var userStore = new UserStore<User>(context);
             var userManager = new UserManager<User>(userStore);
 

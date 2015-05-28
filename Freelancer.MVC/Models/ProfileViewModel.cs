@@ -1,4 +1,8 @@
-﻿namespace Freelancer.MVC.Models
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Freelancer.MVC.Models
 {
     using System;
     using System.Linq.Expressions;
@@ -15,7 +19,8 @@
                     AvatarUrl = x.AvatarUrl,
                     FullName = x.FullName,
                     Info = x.Info,
-                    Username = x.UserName
+                    Username = x.UserName,
+                    Skills = x.Skills.AsQueryable().Select(SkillViewModel.ViewModel)
                 };
             }
         }
@@ -27,5 +32,7 @@
         public string AvatarUrl { get; set; }
 
         public string Info { get; set; }
+
+        public IEnumerable<SkillViewModel> Skills { get; set; }
     }
 }
