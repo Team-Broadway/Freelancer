@@ -1,7 +1,4 @@
-﻿using System.Data.Entity.Core.Common.EntitySql;
-using Microsoft.AspNet.Identity;
-
-namespace Freelancer.MVC.Controllers
+﻿namespace Freelancer.MVC.Controllers
 {
     using Freelancer.Data.UnitOfWork;
     using Freelancer.Models;
@@ -9,6 +6,7 @@ namespace Freelancer.MVC.Controllers
     using System.Linq;
     using System.Web.Mvc;
     using System.Web.Routing;
+    using Microsoft.AspNet.Identity;
 
     public abstract class BaseController : Controller
     {

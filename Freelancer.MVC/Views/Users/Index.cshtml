@@ -1,8 +1,17 @@
-﻿@model Freelancer.MVC.Models.ProfileViewModel
+﻿@model Freelancer.MVC.Models.UserViewModel
+@using Microsoft.AspNet.Identity;
 
 <h1>@Html.DisplayFor(x => x.Username)</h1>
+@if (Request.IsAuthenticated)
+{
+    <h3>@Html.ActionLink("Add Project", "Create", "Projects")</h3>
+}
+
+@if (Model.Username == User.Identity.GetUserName()) {
+    <h3>@Model.Username</h3>
+}
+
 <div>
-    <h2>About @Html.DisplayFor(x => x.FullName):</h2>
     <h3>Skills:</h3>
     @Html.DisplayFor(x => x.Skills)
     <div>@Html.DisplayFor(x => x.Info)</div>
