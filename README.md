@@ -31,3 +31,6 @@ in package manager console
 -	Added route User/username
 -	Added simple example in UsersController
 -	Added roles: Administrator, Moderator and User
+
+30.05.2015:
+- Logged user profile and Other user profile
