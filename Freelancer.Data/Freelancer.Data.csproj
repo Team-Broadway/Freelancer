@@ -64,6 +64,7 @@
     <Compile Include="ApplicationDbContext.cs" />
     <Compile Include="IApplicationDbContext.cs" />
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Repositories\BiddingProjectEmployeesRepository .cs" />
     <Compile Include="Repositories\GenericRepository.cs" />
     <Compile Include="Repositories\IRepository.cs" />
     <Compile Include="Repositories\UsersRepository.cs" />

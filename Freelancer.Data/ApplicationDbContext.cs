@@ -8,12 +8,13 @@ namespace Freelancer.Data
     using Freelancer.Models;
     using Freelancer.Data.Migrations;
 
+
     public class ApplicationDbContext : IdentityDbContext<User>, IApplicationDbContext
     {
         public ApplicationDbContext()
             : base("DefaultConnection")
         {
-            // Database.SetInitializer(new MigrateDatabaseToLatestVersion<ApplicationDbContext, Configuration>());
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<ApplicationDbContext, Configuration>());
         }
 
         public static ApplicationDbContext Create()
@@ -34,15 +35,15 @@ namespace Freelancer.Data
                 map.MapRightKey("SkillId");
             });
 
-            modelBuilder.Entity<User>()
-          .HasMany(x => x.BiddingProjects)
-          .WithMany(x => x.BiddingEmployees)
-           .Map(map =>
-           {
-               map.ToTable("BiddingProjectEmployee");
-               map.MapLeftKey("ProjectId");
-               map.MapRightKey("EmployeeId");
-           });
+          //  modelBuilder.Entity<User>()
+          //.HasMany(x => x.BiddingProjects)
+          //.WithMany(x => x.BiddingEmployees)
+          // .Map(map =>
+          // {
+          //     map.ToTable("BiddingProjectEmployee");
+          //     map.MapLeftKey("ProjectId");
+          //     map.MapRightKey("EmployeeId");
+          // });
 
          //   modelBuilder.Entity<User>()
          //.HasMany(x => x.StartedProjects)
@@ -72,6 +73,8 @@ namespace Freelancer.Data
 
         public IDbSet<ProjectEmployee> ProjectEmployees { get; set; }
 
+        public IDbSet<BiddingProjectEmployee> BiddingProjectEmployees { get; set; }
+
         public IDbSet<Message> Messages { get; set; }
 
         public IDbSet<Question> Questions { get; set; }
@@ -81,5 +84,6 @@ namespace Freelancer.Data
         public IDbSet<Skill> Skills { get; set; }
 
         public IDbSet<Notification> Notifications { get; set; }
+
     }
 }

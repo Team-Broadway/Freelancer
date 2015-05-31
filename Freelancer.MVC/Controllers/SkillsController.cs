@@ -1,6 +1,4 @@
-﻿
-
-namespace Freelancer.MVC.Controllers
+﻿namespace Freelancer.MVC.Controllers
 {
     using System;
     using System.Collections.Generic;
@@ -125,5 +123,5 @@ namespace Freelancer.MVC.Controllers
             this.AddNotification("Skill deleted successfully.", NotificationType.SUCCESS);
             return RedirectToAction("Index");
         }
-            }
+    }
 }

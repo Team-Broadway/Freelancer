@@ -228,12 +228,14 @@ namespace Freelancer.Data.Migrations
 
             context.Exams.Add(DOTNETExam);
 
-            var dbonevUser = context.Users.FirstOrDefault(x => x.UserName == "dbonev");
-            var kiborkUser = context.Users.FirstOrDefault(x => x.UserName == "Kibork");
+            var userStore = new UserStore<User>(context);
+            var userManager = new UserManager<User>(userStore);
+            var RoleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
 
-            OOPExam.Employees.Add(dbonevUser);
-            DOTNETExam.Employees.Add(kiborkUser);
-
+            RoleManager.Create(new IdentityRole("Administrator"));
+            RoleManager.Create(new IdentityRole("Moderator"));
+            RoleManager.Create(new IdentityRole("User"));
+        
             var questionAboutDOTNET = new Question
             {
                 QuestionTitle = "Date of .NET Exam?"
@@ -244,57 +246,36 @@ namespace Freelancer.Data.Migrations
             var dotNETSkill = new Skill
             {
                 Exam = DOTNETExam,
-                Name = ".NET",
-                Users = { kiborkUser }
+                Name = ".NET"
             };
 
             var OOPSkill = new Skill
             {
                 Exam = OOPExam,
-                Name = "OOP",
-                Users = { dbonevUser }
+                Name = "OOP"
             };
 
-            context.Skills.Add(dotNETSkill);
-            context.Skills.Add(OOPSkill);
-
-            var admRole = new IdentityRole
+            if (!context.Users.Any(u => u.UserName == "dbonev"))
             {
-                Name = "Administrator"
-            };
+                var dbonevUser = new User { UserName = "dbonev", Email = "dbonev@abv.bg" };
+                userManager.Create(dbonevUser, "123321");
+                userManager.AddToRole(dbonevUser.Id, "Administrator");
 
-            context.Roles.Add(admRole);
+                OOPExam.Employees.Add(dbonevUser);
+                dbonevUser.Skills.Add(OOPSkill);
+                dbonevUser.Skills.Add(dotNETSkill);
+            }
 
-            var modRole = new IdentityRole
+            if (!context.Users.Any(u => u.UserName == "dbonev"))
             {
-                Name = "Moderator"
-            };
+                var kiborkUser = new User { UserName = "Kibork", Email = "kibork@abv.bg" };
+                userManager.Create(kiborkUser, "123456");
+                userManager.AddToRole(kiborkUser.Id, "User");
 
-            context.Roles.Add(modRole);
-
-            var userRole = new IdentityRole
-            {
-                Name = "User"
-            };
-            
-            context.Roles.Add(userRole);
-
-            dbonevUser.Skills.Add(OOPSkill);
-            dbonevUser.Skills.Add(dotNETSkill);
-
-            kiborkUser.Skills.Add(dotNETSkill);
-
-            OOPExam.Employees.Add(dbonevUser);
-            DOTNETExam.Employees.Add(dbonevUser);
-
-            DOTNETExam.Employees.Add(kiborkUser);
-
-            var userStore = new UserStore<User>(context);
-            var userManager = new UserManager<User>(userStore);
-
-            userManager.AddToRole(dbonevUser.Id, "Administrator");
-            userManager.AddToRole(kiborkUser.Id, "User");
-
+                DOTNETExam.Employees.Add(kiborkUser);
+                kiborkUser.Skills.Add(dotNETSkill);
+            }
+          
             context.SaveChanges();
         }
     }

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 
@@ -16,12 +18,13 @@ namespace Freelancer.Models
 
         private ICollection<ProjectEmployee> projectEmployee;
 
+        private ICollection<BiddingProjectEmployee> biddingProjectEmployee;
         public Project()
         {
             this.skills = new HashSet<Skill>();
-            this.biddingEmployees = new HashSet<User>();
             this.bookmarkedUsers = new HashSet<User>();
             this.projectEmployee = new HashSet<ProjectEmployee>();
+            this.biddingProjectEmployee = new HashSet<BiddingProjectEmployee>();
         }
 
         public int Id { get; set; }
@@ -30,12 +33,19 @@ namespace Freelancer.Models
 
         public string Description { get; set; }
 
-        public decimal StartPrice { get; set; }
+        [DisplayName("Start Price")]
+        public int StartPrice { get; set; }
+       
+        [DisplayName("End Price")]
+        public int EndPrice { get; set; }
 
-        public decimal EndPrice { get; set; }
+        public DateTime StartDate { get; set; }
 
+        [DataType(DataType.Date)]
+        [DisplayName("Due Date")]
         public DateTime DueDate { get; set; }
 
+        [DefaultValue(true)]
         public bool IsOpen { get; set; }
 
         public int MaxExperience { get; set; }
@@ -44,10 +54,10 @@ namespace Freelancer.Models
 
         public virtual ICollection<Skill> Skills { get { return this.skills; } }
 
-        public virtual ICollection<User> BiddingEmployees { get { return this.biddingEmployees; } }
-
         public virtual ICollection<User> BookmarkedUsers { get { return this.bookmarkedUsers; } }
 
         public virtual ICollection<ProjectEmployee> ProjectEmployee { get { return this.projectEmployee; } }
+
+        public virtual ICollection<BiddingProjectEmployee> BiddingProjectEmployee { get { return this.biddingProjectEmployee; } }
     }
 }

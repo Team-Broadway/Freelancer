@@ -22,20 +22,8 @@ namespace Freelancer.Models
 
         public virtual Exam Exam { get; set; }
 
-        public virtual ICollection<Project> Projects
-        {
-            get
-            {
-                return this.projects;
-            }
-        }
+        public virtual ICollection<Project> Projects { get { return projects; } }
 
-        public virtual ICollection<User> Users
-        {
-            get
-            {
-                return this.users;
-            }
-        }
+        public virtual ICollection<User> Users { get { return users; } }
     }
 }

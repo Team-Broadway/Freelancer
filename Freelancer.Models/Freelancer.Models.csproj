@@ -41,6 +41,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BiddingProjectEmployee.cs" />
+    <Compile Include="IsPriceAfterAttribute.cs" />
     <Compile Include="Review.cs" />
     <Compile Include="Exam.cs" />
     <Compile Include="Message.cs" />

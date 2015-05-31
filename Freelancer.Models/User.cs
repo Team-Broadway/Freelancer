@@ -13,8 +13,8 @@ namespace Freelancer.Models
 {
     public class User : IdentityUser
     {
-        private ICollection<Project> biddingProjects;
         private ICollection<ProjectEmployee> projectEmployee;
+        private ICollection<BiddingProjectEmployee> biddingProjectEmployee;
         private ICollection<Project> bookmarkedProjects;
 
         private ICollection<Skill> skills;
@@ -25,8 +25,8 @@ namespace Freelancer.Models
  
         public User()
         {
-            this.biddingProjects = new HashSet<Project>();
             this.projectEmployee = new HashSet<ProjectEmployee>();
+            this.biddingProjectEmployee = new HashSet<BiddingProjectEmployee>();
             this.bookmarkedProjects = new HashSet<Project>();
             this.reviews = new HashSet<Review>();
             this.skills = new HashSet<Skill>();
@@ -48,14 +48,14 @@ namespace Freelancer.Models
         [Range(1, 100)]
         public int? Level { get; set; }
 
-        public virtual ICollection<Project> BiddingProjects
-        {
-            get { return this.biddingProjects; }
-        }
-
         public virtual ICollection<ProjectEmployee> ProjectEmployee
         {
             get { return this.projectEmployee; }
+        }
+
+        public virtual ICollection<BiddingProjectEmployee> BiddingProjectEmployee
+        {
+            get { return this.biddingProjectEmployee; }
         }
 
         public virtual ICollection<Project> BookmarkedProjects

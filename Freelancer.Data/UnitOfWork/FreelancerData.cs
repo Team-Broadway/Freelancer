@@ -1,11 +1,14 @@
 ﻿namespace Freelancer.Data.UnitOfWork
 {
+
     using Freelancer.Data;
     using Freelancer.Data.Repositories;
     using Freelancer.Models;
     using System;
     using System.Collections.Generic;
-    
+    using System.Data.Entity;
+
+
     public class FreelancerData : IFreelancerData
     {
         private ApplicationDbContext context;
@@ -44,7 +47,7 @@
 
         public ProjectEmployeesRepository ProjectEmployees
         {
-            get { return (ProjectEmployeesRepository)this.GetRepository<ProjectEmployee>(); }
+            get { return (ProjectEmployeesRepository)this.GetRepository<BiddingProjectEmployee>(); }
         }
 
         public QuestionsRepository Questions
@@ -89,7 +92,7 @@
                     typeOfRepository = typeof(MessagesRepository);
                 }
 
-                if (type.IsAssignableFrom(typeof(ProjectEmployee)))
+                if (type.IsAssignableFrom(typeof(BiddingProjectEmployee)))
                 {
                     typeOfRepository = typeof(ProjectEmployeesRepository);
                 }

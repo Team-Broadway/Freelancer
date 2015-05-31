@@ -1,5 +1,4 @@
-﻿
-namespace Freelancer.MVC.Controllers
+﻿namespace Freelancer.MVC.Controllers
 {
     using System;
     using System.Collections.Generic;
@@ -13,6 +12,8 @@ namespace Freelancer.MVC.Controllers
     using Freelancer.Models;
     using Freelancer.Data.UnitOfWork;
     using Freelancer.MVC.Extensions;
+    using Freelancer.MVC.Models;
+    using AutoMapper;
     public class ProjectsController : BaseController
     {
 
@@ -25,7 +26,19 @@ namespace Freelancer.MVC.Controllers
         // GET: Projects
         public ActionResult Index()
         {
-            return View(this.Data.Projects.All().ToList());
+            IEnumerable<ProjectViewModel> model;
+
+            var projects = this.Data.Projects.All().ToList();
+
+            Mapper.CreateMap<Project, ProjectViewModel>()
+                .ForMember(x => x.Bids, o => o.MapFrom(x => x.BiddingProjectEmployee.Count))
+                .ForMember(x => x.Skills, o => o.MapFrom(so => so.Skills.Select(t => t.Name).ToList()))
+                .ForMember(x => x.Price, o => o.MapFrom(s => s.StartPrice.ToString() + " - " + s.EndPrice.ToString()));
+
+
+            model = Mapper.Map<ICollection<Project>, IEnumerable<ProjectViewModel>>(projects);
+
+            return View(model);
         }
 
         [Authorize(Roles = "Admin")]
@@ -34,7 +47,6 @@ namespace Freelancer.MVC.Controllers
             return View(this.Data.Projects.All().ToList());
 
         }
-
 
         // GET: Projects/Details/5
         public ActionResult Details(int? id)
@@ -61,7 +73,8 @@ namespace Freelancer.MVC.Controllers
         // GET: Projects/Create
         public ActionResult Create()
         {
-            return View();
+            var skills = this.Data.Skills.All().ToList();
+            return View(skills);
         }
 
         // POST: Projects/Create
@@ -69,17 +82,24 @@ namespace Freelancer.MVC.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Title,Description,StartPrice,EndPrice,DueDate,IsOpen,MaxExperience")] Project project)
+        public ActionResult Create([Bind(Include = "Id,Title,Description,StartPrice,EndPrice,DueDate")] Project project, HashSet<string> SelectedSkills)
         {
             if (ModelState.IsValid)
             {
-                Data.Projects.Add(project);
-                Data.SaveChanges();
+                project.Employer = this.UserProfile;
+                project.StartDate = DateTime.Now;
+                if (SelectedSkills != null)
+                {
+                    foreach (string skill in SelectedSkills)
+                    {
+                        project.Skills.Add(this.Data.Skills.Find(Int32.Parse(skill)));
+                    }
+                }
+                this.Data.Projects.Add(project);
+                this.Data.SaveChanges();
                 this.AddNotification("Project created.", NotificationType.SUCCESS);
-                return RedirectToAction("Index");
             }
-
-            return View(project);
+            return RedirectToAction("Index");
         }
 
         // GET: Projects/Edit/5

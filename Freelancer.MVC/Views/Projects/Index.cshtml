@@ -1,76 +1,120 @@
-﻿@model IEnumerable<Freelancer.Models.Project>
-@using Microsoft.AspNet.Identity;
+﻿@using Microsoft.AspNet.Identity;
+@model IEnumerable<Freelancer.MVC.Models.ProjectViewModel>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Projects";
+    string userId = "";
+    if (User.Identity.IsAuthenticated)
+    {
+        userId = User.Identity.GetUserId();
+    }
 }
 
-<h2>Index</h2>
+<div class="section-title">
+    <div>@ViewBag.Title</div>
+</div>
 
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Title)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Description)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.StartPrice)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.EndPrice)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.DueDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.IsOpen)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.MaxExperience)
-        </th>
-        @if (Request.IsAuthenticated)
-        {
-            <th></th>
-        }
-    </tr>
+<table class="table table-responsive" id="projects-table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Bids)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Skills)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StartDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Title)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Description)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.StartPrice)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.EndPrice)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DueDate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.IsOpen)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.MaxExperience)
-        </td>
-        @if (Request.IsAuthenticated && item.Employer.UserName == User.Identity.GetUserName())
-        {
+            </th>
+        </tr>
+    </thead>
+    @foreach (var item in Model)
+    {
+        <tr class="project-info">
             <td>
-                @Html.ActionLink("Edit", "Edit", new {id = item.Id}) |
-                @Html.ActionLink("Details", "Details", new {id = item.Id}) |
-                @Html.ActionLink("Delete", "Delete", new {id = item.Id})
+                @Html.ActionLink(item.Title, "view", new { id = item.Id }, new { @class = "project-title" })
             </td>
-        }
-    </tr>
-}
+            <td>
+                @Html.DisplayFor(modelItem => item.Bids)
+            </td>
+            <td>
+                @String.Join(", ", item.Skills)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StartDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    var isFavorited = item.BookmarkedUsers.Any(u => u.Id == userId);
+                    string fill = isFavorited ? "yellow" : "gray";
+                    <div class="favorite-star">
+                        <svg height="21" width="21">
+                            <polygon points="10,1 4,19.8 19,7.8 1,7.8 16,19.8"
+                                     style="fill:@fill;stroke-width:0;fill-rule:nonzero;" />
+                        </svg>
+                        <div class="favorite-star-message">
+
+                        </div>
+                    </div>
+                }
+            </td>
+            @if (Request.IsAuthenticated && item.Employer.UserName == User.Identity.GetUserName())
+            {
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                </td>
+            }
+        </tr>
+        <tr class="project-description">
+            <td colspan="6">
+                <div class="description-inner">
+                    <div class="description-text">@Html.DisplayFor(modelItem => item.Description)</div>
+                    <div>@Html.ActionLink("Bid on this project", "Bid", "Projects")</div>
+                </div>
+            </td>
+        </tr>
+    }
 
 </table>
+
+<script>
+    $(document).ready(function () {
+        $(".project-info").mouseover(function () {
+            $(this).next().css("display", "table");
+            $(this).next().children().css("border", "none");
+        })
+
+        $(".project-info").mouseout(function () {
+            $(this).next().css("display", "none");
+        })
+
+        $(".project-description").mouseover(function () {
+            $(this).css("display", "table");
+            $(this).children().css("border", "none");
+        })
+
+        $(".project-description").mouseout(function () {
+            $(this).css("display", "none");
+        })
+
+    }())
+
+</script>

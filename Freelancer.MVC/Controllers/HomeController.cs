@@ -1,10 +1,9 @@
-﻿using System.Data.Entity;
-using Freelancer.Data;
-using Freelancer.Data.Migrations;
-
-namespace Freelancer.MVC.Controllers
+﻿namespace Freelancer.MVC.Controllers
 {
     using Freelancer.Data.UnitOfWork;
+    using System.Data.Entity;
+    using Freelancer.Data;
+    using Freelancer.Data.Migrations;
     using System.Linq;
     using System.Web.Mvc;
 
@@ -13,7 +12,6 @@ namespace Freelancer.MVC.Controllers
         public HomeController(IFreelancerData data)
             :base(data)
         {
-            Database.SetInitializer(new MigrateDatabaseToLatestVersion<ApplicationDbContext, Configuration>());
         }
 
         public ActionResult Index()
@@ -21,7 +19,6 @@ namespace Freelancer.MVC.Controllers
             return View();
         }
 
-<<<<<<< .mine
         public JsonResult CheckUsername(string Username)
         {
             bool userExists = this.Data.Users.All().Any(u => u.UserName == Username);
@@ -34,7 +31,6 @@ namespace Freelancer.MVC.Controllers
                 return Json(true, JsonRequestBehavior.AllowGet);
             }
         }
-=======
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";
@@ -48,6 +44,5 @@ namespace Freelancer.MVC.Controllers
 
             return View();
         }
->>>>>>> .r10
     }
 }

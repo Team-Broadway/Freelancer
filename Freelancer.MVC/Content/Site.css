@@ -1,6 +1,7 @@
 ﻿body {
     padding-top: 50px;
     padding-bottom: 20px;
+    background-color:#FFFFE9;
 }
 
 /* Set padding to keep content from hitting the edges */
@@ -21,4 +22,67 @@ input,
 select,
 textarea {
     max-width: 280px;
+}
+.navbar-inverse{
+    background-color:lightblue;
+    border-color:gray;
+}
+.navbar-inverse .navbar-brand{
+    color:gray;
+}
+.navbar-inverse .navbar-nav > li > a{
+    color:gray;
+}
+.section-title{
+    display:inline;
+    background-color:blue;
+}
+.section-title > div{
+    padding:15px;
+    background-color:beige;
+    margin:15px;
+}
+
+.form-group > .col-md-10 > input[type="number"]{
+    width:85px;
+}
+
+.form-group > .col-md-10 > input[type="date"]{
+    width:170px;
+}
+
+.image-holder {
+    padding-top:7px;
+    padding-bottom:7px;
+}
+
+.skillsList{
+    background-color:white;
+    height:150px;
+    width:150px;
+    padding-left:10px;
+    overflow-y:scroll;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling:touch;
+}
+
+#projects-table > tbody> .project-info:hover{
+    background-color:#CFBDA5;
+}
+.projects-title{
+
+}
+#project-details{
+    margin-top:20px;
+}
+#project-details > div > a{
+    border:1px solid groove;
+    background-color:darkseagreen;
+    padding:10px;
+}
+.project-description{
+    display:none;
+}
+.description-inner > div{
+    display:inline-block;
 }

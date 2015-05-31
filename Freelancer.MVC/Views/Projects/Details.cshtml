@@ -4,10 +4,10 @@
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
-
-<div>
-    <h4>Project</h4>
+<div id="project-details">
+    <div>
+        @Html.ActionLink("Bid on this project", "Bid", "Projects")
+    </div>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -67,6 +67,48 @@
         </dd>
 
     </dl>
+    <table class="table" id="bidders-table">
+        <thead>
+            <tr>
+                <th>
+                    Freelancers bidding
+                </th>
+                <th>
+                    Reputation
+                </th>
+                <th>
+                    Bid
+                </th>
+            </tr>
+        </thead>
+        @foreach (var bidder in Model.BiddingProjectEmployee)
+        {
+            <tr>
+                <td>
+                    <div class="row">
+                        <div class="col-lg-9">
+                            <img src="@bidder.Employee.AvatarUrl" width="50" />
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    @Html.ActionLink(@bidder.Employee.UserName, "User", "User")
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td></td>
+                <td></td>
+            </tr>
+        }
+    </table>
+
 </div>
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |

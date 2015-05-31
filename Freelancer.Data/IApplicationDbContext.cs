@@ -17,6 +17,8 @@ namespace Freelancer.Data
 
         IDbSet<ProjectEmployee> ProjectEmployees { get; set; }
 
+        IDbSet<BiddingProjectEmployee> BiddingProjectEmployees { get; set; }
+
         IDbSet<Message> Messages { get; set; }
 
         IDbSet<Question> Questions { get; set; }

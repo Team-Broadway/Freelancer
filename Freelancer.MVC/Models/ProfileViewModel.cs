@@ -10,21 +10,6 @@ namespace Freelancer.MVC.Models
 
     public class ProfileViewModel
     {
-        public static Expression<Func<User, ProfileViewModel>> ViewModel
-        {
-            get
-            {
-                return x => new ProfileViewModel
-                {
-                    AvatarUrl = x.AvatarUrl,
-                    FullName = x.FullName,
-                    Info = x.Info,
-                    Username = x.UserName,
-                    Skills = x.Skills.AsQueryable().Select(SkillViewModel.ViewModel)
-                };
-            }
-        }
-
         public string Username { get; set; }
 
         public string FullName { get; set; }
