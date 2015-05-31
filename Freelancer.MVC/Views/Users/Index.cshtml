@@ -4,11 +4,12 @@
 <h1>@Html.DisplayFor(x => x.Username)</h1>
 @if (Request.IsAuthenticated)
 {
-    <h3>@Html.ActionLink("Add Project", "Create", "Projects")</h3>
+    <h4>@Html.ActionLink("Add Project", "Create", "Projects")</h4>
 }
 
-@if (Model.Username == User.Identity.GetUserName()) {
-    <h3>@Model.Username</h3>
+@if (Model.Username == User.Identity.GetUserName())
+{
+    <div>@Html.ActionLink("Change Password", "ChangePassword", "Manage")</div>
 }
 
 <div>

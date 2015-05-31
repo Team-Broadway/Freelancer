@@ -10,8 +10,8 @@
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
-                name: "User",
-                url: "User/{username}",
+                name: "Users",
+                url: "Users/{username}",
                 defaults: new { controller = "Users", action = "Index" }
             );
 
