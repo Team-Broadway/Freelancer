@@ -12,8 +12,6 @@ namespace Freelancer.Models
 
         private ICollection<Skill> skills;
 
-        private ICollection<User> biddingEmployees;
-
         private ICollection<User> bookmarkedUsers;
 
         private ICollection<ProjectEmployee> projectEmployee;
