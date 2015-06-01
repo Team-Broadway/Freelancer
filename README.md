@@ -5,7 +5,6 @@ ASP.NET MVC Project
 - roles
 - bidding to project
 - notification signalR 
-
 - ajax projects (paging, signalR)
 - adding employees to project
 - bookmarking 
