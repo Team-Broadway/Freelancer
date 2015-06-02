@@ -14,6 +14,7 @@
     using Freelancer.MVC.Extensions;
     using Freelancer.MVC.Models;
     using AutoMapper;
+
     public class ProjectsController : BaseController
     {
 
@@ -49,19 +50,37 @@
 
         //}
 
-        // GET: Projects/Details/5
-        public ActionResult Details(int? id)
+     
+        public ActionResult Details(int? id,string bid)
         {
+
+            ProjectDetailedViewModel model;
+
+            Mapper.CreateMap<Project, ProjectDetailedViewModel>()
+               .ForMember(x => x.Bids, o => o.MapFrom(x => x.BiddingProjectEmployee.Count))
+               .ForMember(x => x.Skills, o => o.MapFrom(so => so.Skills.Select(t => t.Name).ToList()))
+               .ForMember(x => x.Price, o => o.MapFrom(s => s.StartPrice.ToString() + " - " + s.EndPrice.ToString() + " BGN"))
+               .ForMember(x => x.StartDate, o => o.MapFrom(s => s.StartDate.Date == DateTime.Now.Date ? "Today" : s.StartDate.ToShortDateString()))
+               .ForMember(x => x.StartDate, o => o.MapFrom(s => s.DueDate.Date.ToShortDateString()));
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+
             Project project = this.Data.Projects.Find(id);
+            model = Mapper.Map<Project, ProjectDetailedViewModel>(project);
+
+            if (bid == "true")
+            {
+                model.BidMenuOpen = true;
+            }
+
             if (project == null)
             {
                 return HttpNotFound();
             }
-            return View(project);
+            return View(model);
         }
 
         [Authorize(Roles = "Admin")]

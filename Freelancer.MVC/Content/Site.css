@@ -66,9 +66,18 @@ textarea {
     -webkit-overflow-scrolling:touch;
 }
 
-#projects-table > tbody> .project-info:hover{
+/*tbody > tr:hover, tr:hover + tr {
     background-color:#CFBDA5;
-}
+}*/
+
+/*.project-info ,.project-description{
+    background-color: #FFFFE9;
+}*/
+
+/*.project-info:hover + .project-description{
+    background-color:#CFBDA5;
+}*/
+
 .projects-title{
 
 }

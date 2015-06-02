@@ -1,11 +1,17 @@
-﻿@model Freelancer.Models.Project
+﻿@using Microsoft.AspNet.Identity;
+@model Freelancer.MVC.Models.ProjectDetailedViewModel
 
 @{
     ViewBag.Title = "Details";
+    var displayMenu = Model.BidMenuOpen ? "block" : "none";
 }
 
 <div id="project-details">
     <div>
+        <div class="bid-menu" style="display:@displayMenu">
+            <input type="number" />
+
+        </div>
         <a href='@(Url.Action("Bid", "Projects"))' class="btn btn-custom">
             <span class="glyphicon glyphicon-arrow-up">Bid on this project</span>
         </a>
@@ -29,19 +35,11 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.StartPrice)
+            @Html.DisplayNameFor(model => model.Price)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.StartPrice)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.EndPrice)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.EndPrice)
+            @Html.DisplayFor(model => model.Price)
         </dd>
 
         <dt>
@@ -59,15 +57,15 @@
         <dd>
             @Html.DisplayFor(model => model.IsOpen)
         </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.MaxExperience)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.MaxExperience)
-        </dd>
-
+       
+        @if (Request.IsAuthenticated && Model.Employer.UserName == User.Identity.GetUserName())
+        {
+            <dd>
+                @Html.ActionLink("Edit", "Edit", new { id = Model.Id })
+                @Html.ActionLink("Details", "Details", new { id = Model.Id })
+                @Html.ActionLink("Delete", "Delete", new { id = Model.Id })
+            </dd>
+        }
     </dl>
     <table class="table" id="bidders-table">
         <thead>
