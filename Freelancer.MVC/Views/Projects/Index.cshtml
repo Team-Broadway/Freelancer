@@ -44,7 +44,7 @@
     {
         <tr class="project-info">
             <td>
-                @Html.ActionLink(item.Title, "view", new { id = item.Id }, new { @class = "project-title" })
+                @Html.ActionLink(item.Title, "Details", new { id = item.Id }, new { @class = "project-title" })
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Bids)
@@ -63,7 +63,7 @@
                 {
                     var isFavorited = item.BookmarkedUsers.Any(u => u.Id == userId);
                     string fill = isFavorited ? "yellow" : "gray";
-                    <div class="favorite-star">
+                    <div class="favorite-star" data-id="@item.Id">
                         <svg height="21" width="21">
                             <polygon points="10,1 4,19.8 19,7.8 1,7.8 16,19.8"
                                      style="fill:@fill;stroke-width:0;fill-rule:nonzero;" />
@@ -74,20 +74,20 @@
                     </div>
                 }
             </td>
-            @if (Request.IsAuthenticated && item.Employer.UserName == User.Identity.GetUserName())
+            @*@if (Request.IsAuthenticated && item.Employer.UserName == User.Identity.GetUserName())
             {
                 <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) 
+                    @Html.ActionLink("Details", "Details", new { id = item.Id }) 
                     @Html.ActionLink("Delete", "Delete", new { id = item.Id })
                 </td>
-            }
+            }*@
         </tr>
         <tr class="project-description">
             <td colspan="6">
                 <div class="description-inner">
                     <div class="description-text">@Html.DisplayFor(modelItem => item.Description)</div>
-                    <div>@Html.ActionLink("Bid on this project", "Bid", "Projects")</div>
+                    <div class="bid-button">@Html.ActionLink("Bid", "Bid", "Projects", new { @class = "btn btn-primary" })</div>
                 </div>
             </td>
         </tr>
@@ -97,24 +97,51 @@
 
 <script>
     $(document).ready(function () {
-        $(".project-info").mouseover(function () {
-            $(this).next().css("display", "table");
+        $(".project-info").hover(function () {
+            $(this).next().css("display", "table-row");
+            //$(this).next().css("background-color", "#CFBDA5");
             $(this).next().children().css("border", "none");
-        })
-
-        $(".project-info").mouseout(function () {
+        }, function () {
             $(this).next().css("display", "none");
         })
 
-        $(".project-description").mouseover(function () {
-            $(this).css("display", "table");
+        $(".project-description").hover(function () {
+            $(this).css("display", "table-row");
             $(this).children().css("border", "none");
-        })
-
-        $(".project-description").mouseout(function () {
+        }, function () {
             $(this).css("display", "none");
         })
 
-    }())
+        $(".favorite-star").hover(function () {
+            var polygon = $(this).find("polygon");
+            polygon.data("fav-color", polygon.css("fill"));
+            polygon.css("fill", "skyblue");
+        }, function () {
+            $(this).find("polygon").css("fill", $(this).find("polygon").data("fav-color"));
+        })
 
+        $(".project-info").on("click", ".favorite-star", function () {
+            return function(){
+                var $this = $(this);
+                var id = $this.data("id");
+                $.ajax({
+                    type: "POST",
+                    url: "/Projects/Bookmark/" + id,
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (data, datatype) {
+                        if (data) {
+                            $this.find("polygon").css("fill", "yellow");
+                        } else {
+                            $this.find("polygon").css("fill", "gray");
+                        }
+                    },
+                    error: function (err) {
+                    }
+                });
+            }
+        }());
+
+
+    });
 </script>

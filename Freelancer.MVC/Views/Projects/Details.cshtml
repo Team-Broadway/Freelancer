@@ -6,7 +6,9 @@
 
 <div id="project-details">
     <div>
-        @Html.ActionLink("Bid on this project", "Bid", "Projects")
+        <a href='@(Url.Action("Bid", "Projects"))' class="btn btn-custom">
+            <span class="glyphicon glyphicon-arrow-up">Bid on this project</span>
+        </a>
     </div>
     <hr />
     <dl class="dl-horizontal">

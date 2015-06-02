@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -13,12 +14,18 @@ namespace Freelancer.MVC.Models
 
         public string Description { get; set; }
 
-        //[IsPriceAfterAttribute("Beginning", ErrorMessage = "Start Price must be less than End Price")]
+        [DisplayName("Start Price")]
+        [Range(0,10000)]   
         public int StartPrice { get; set; }
 
+        [DisplayName("End Price")]
+        [Range(0, 10000)]
         public int EndPrice { get; set; }
 
+        [DisplayName("Due Date")]
+        [DataType(DataType.Date)]
         public DateTime DueDate { get; set; }
 
+        public ICollection<Skill> Skills { get; set; }
     }
 }

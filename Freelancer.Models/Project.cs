@@ -31,16 +31,12 @@ namespace Freelancer.Models
 
         public string Description { get; set; }
 
-        [DisplayName("Start Price")]
         public int StartPrice { get; set; }
        
-        [DisplayName("End Price")]
         public int EndPrice { get; set; }
 
         public DateTime StartDate { get; set; }
 
-        [DataType(DataType.Date)]
-        [DisplayName("Due Date")]
         public DateTime DueDate { get; set; }
 
         [DefaultValue(true)]

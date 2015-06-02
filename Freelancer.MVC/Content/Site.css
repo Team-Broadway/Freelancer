@@ -75,14 +75,38 @@ textarea {
 #project-details{
     margin-top:20px;
 }
-#project-details > div > a{
-    border:1px solid groove;
-    background-color:darkseagreen;
-    padding:10px;
-}
 .project-description{
     display:none;
 }
 .description-inner > div{
     display:inline-block;
+}
+.description-inner > .bid-button{
+    float:right;
+}
+.favorite-star{
+    width:21px;
+    height:21px;
+}
+.favorite-star svg:hover{
+    cursor:pointer;
+}
+.btn-custom {
+  background-color: hsl(194, 55%, 59%) !important;
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#cbe7f0", endColorstr="#5cb5cf");
+  background-image: -khtml-gradient(linear, left top, left bottom, from(#cbe7f0), to(#5cb5cf));
+  background-image: -moz-linear-gradient(top, #cbe7f0, #5cb5cf);
+  background-image: -ms-linear-gradient(top, #cbe7f0, #5cb5cf);
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #cbe7f0), color-stop(100%, #5cb5cf));
+  background-image: -webkit-linear-gradient(top, #cbe7f0, #5cb5cf);
+  background-image: -o-linear-gradient(top, #cbe7f0, #5cb5cf);
+  background-image: linear-gradient(#cbe7f0, #5cb5cf);
+  border-color: #5cb5cf #5cb5cf hsl(194, 55%, 52%);
+  color: #333 !important;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.46);
+  -webkit-font-smoothing: antialiased;
+}
+.btn-custom:hover{
+      background-color: #f5a77d;
 }

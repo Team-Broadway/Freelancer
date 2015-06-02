@@ -33,7 +33,8 @@
             Mapper.CreateMap<Project, ProjectViewModel>()
                 .ForMember(x => x.Bids, o => o.MapFrom(x => x.BiddingProjectEmployee.Count))
                 .ForMember(x => x.Skills, o => o.MapFrom(so => so.Skills.Select(t => t.Name).ToList()))
-                .ForMember(x => x.Price, o => o.MapFrom(s => s.StartPrice.ToString() + " - " + s.EndPrice.ToString()));
+                .ForMember(x => x.Price, o => o.MapFrom(s =>  s.StartPrice.ToString() + " - " + s.EndPrice.ToString() + " BGN"))
+                .ForMember(x => x.StartDate, o => o.MapFrom(s => s.StartDate.Date == DateTime.Now.Date ? "Today" : s.StartDate.ToShortDateString()));
 
 
             model = Mapper.Map<ICollection<Project>, IEnumerable<ProjectViewModel>>(projects);
@@ -41,12 +42,12 @@
             return View(model);
         }
 
-        [Authorize(Roles = "Admin")]
-        public ActionResult List()
-        {
-            return View(this.Data.Projects.All().ToList());
+        //[Authorize(Roles = "Admin")]
+        //public ActionResult List()
+        //{
+        //    return View(this.Data.Projects.All().ToList());
 
-        }
+        //}
 
         // GET: Projects/Details/5
         public ActionResult Details(int? id)
@@ -84,7 +85,7 @@
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,Title,Description,StartPrice,EndPrice,DueDate")] Project project, HashSet<string> SelectedSkills)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && project.StartPrice <= project.EndPrice)
             {
                 project.Employer = this.UserProfile;
                 project.StartDate = DateTime.Now;
@@ -99,23 +100,27 @@
                 this.Data.SaveChanges();
                 this.AddNotification("Project created.", NotificationType.SUCCESS);
             }
+            else
+            {
+                this.AddNotification("Project error.", NotificationType.ERROR);
+            }
             return RedirectToAction("Index");
         }
 
         // GET: Projects/Edit/5
-        public ActionResult Edit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Project project = this.Data.Projects.Find(id);
-            if (project == null)
-            {
-                return HttpNotFound();
-            }
-            return View(project);
-        }
+        //public ActionResult Edit(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //    Project project = this.Data.Projects.Find(id);
+        //    if (project == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+        //    return View(project);
+        //}
 
         // POST: Projects/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
@@ -135,19 +140,19 @@
         }
 
         // GET: Projects/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Project project = this.Data.Projects.Find(id);
-            if (project == null)
-            {
-                return HttpNotFound();
-            }
-            return View(project);
-        }
+        //public ActionResult Delete(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //    Project project = this.Data.Projects.Find(id);
+        //    if (project == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+        //    return View(project);
+        //}
 
         // POST: Projects/Delete/5
         [HttpPost, ActionName("Delete")]
@@ -159,6 +164,28 @@
             Data.SaveChanges();
             this.AddNotification("Project deleted.", NotificationType.SUCCESS);
             return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        [Authorize]
+        [Route("bookmark/{id:int}")]
+        public JsonResult Bookmark(int id)
+        {
+            var project = this.Data.Projects.Find(id);
+            bool result;
+            if(UserProfile.BookmarkedProjects.Any(p => p.Id == id))
+            {
+                UserProfile.BookmarkedProjects.Remove(project);
+                result = false;
+            }
+            else
+            {
+                UserProfile.BookmarkedProjects.Add(project);
+                result = true;
+            }
+            
+            this.Data.SaveChanges();
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
     }
 }

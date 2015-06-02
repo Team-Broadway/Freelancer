@@ -2,7 +2,7 @@
 
 @{
     ViewBag.Title = "Create project";
-    var project = new Freelancer.Models.Project();
+    var project = new Freelancer.MVC.Models.ProjectCreateModel();
 }
 
 <div class="section-title">
@@ -85,3 +85,29 @@
     @Html.ActionLink("Back to List", "Index")
 </div>
 
+<script>
+    $(document).ready(function () {
+        $startPriceInput = $("#project_StartPrice");
+        $endPriceInput = $("#project_EndPrice");
+        $startPriceMessage = $("span[data-valmsg-for='project.StartPrice']");
+
+        $startPriceInput.change(function () {
+            compareInputs();
+        });
+        
+        $endPriceInput.change(function () {
+            compareInputs();
+        });
+
+        function compareInputs()
+        {
+            if (parseInt($startPriceInput.val()) > parseInt($endPriceInput.val())) {
+                $startPriceMessage.text("Start Price must be less than End Price");
+                $endPriceMessage.text("End Price must be greater than Start Price");
+            } else {
+                $startPriceMessage.text("");
+            }
+        }
+
+    }())
+</script>

@@ -19,7 +19,7 @@ namespace Freelancer.MVC.Models
         public IEnumerable<string> Skills { get; set; }
 
         [DisplayName("Started")]
-        public DateTime StartDate { get; set; }
+        public string StartDate { get; set; }
 
         public string Price { get; set; }
 
