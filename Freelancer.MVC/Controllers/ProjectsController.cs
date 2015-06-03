@@ -16,6 +16,8 @@
     using Freelancer.MVC.Models;
     using AutoMapper;
 
+    using Microsoft.AspNet.Identity;
+
     [Authorize]
     public class ProjectsController : BaseController
     {
@@ -34,7 +36,7 @@
 
         public ActionResult List(int? page)
         {
-            if(!this.HttpContext.Request.IsAjaxRequest())
+            if (!this.HttpContext.Request.IsAjaxRequest())
             {
                 return RedirectToAction("Index");
             }
@@ -61,7 +63,7 @@
 
         //}
 
-     
+
         public ActionResult Details(int? id)
         {
             ProjectDetailedViewModel model;
@@ -166,7 +168,7 @@
         {
             var project = this.Data.Projects.Find(id);
             bool result;
-            if(UserProfile.BookmarkedProjects.Any(p => p.Id == id))
+            if (UserProfile.BookmarkedProjects.Any(p => p.Id == id))
             {
                 UserProfile.BookmarkedProjects.Remove(project);
                 result = false;
@@ -176,15 +178,15 @@
                 UserProfile.BookmarkedProjects.Add(project);
                 result = true;
             }
-            
+
             this.Data.SaveChanges();
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
-   
+
         public ActionResult BidMenu()
         {
-              if(!this.HttpContext.Request.IsAjaxRequest())
+            if (!this.HttpContext.Request.IsAjaxRequest())
             {
                 return RedirectToAction("Index");
             }
@@ -198,6 +200,14 @@
 
         //    }
         //}
+
+        public ActionResult My()
+        {
+            string currentUserId = this.User.Identity.GetUserId();
+            var projects = this.Data.ProjectEmployees.All().Where(p => p.EmployeeId == currentUserId).ToList();
+            
+            return this.View();
+        }
 
     }
 }
