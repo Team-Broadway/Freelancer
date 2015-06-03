@@ -19,6 +19,8 @@ namespace Freelancer.Data.UnitOfWork
         ProjectsRepository Projects { get; }
        
         ProjectEmployeesRepository ProjectEmployees { get; }
+
+        BiddingProjectEmployeesRepository BiddingProjectEmployees { get; }
        
         QuestionsRepository Questions { get; }
       

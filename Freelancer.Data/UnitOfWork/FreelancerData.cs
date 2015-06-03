@@ -47,7 +47,13 @@
 
         public ProjectEmployeesRepository ProjectEmployees
         {
-            get { return (ProjectEmployeesRepository)this.GetRepository<BiddingProjectEmployee>(); }
+            get { return (ProjectEmployeesRepository)this.GetRepository<ProjectEmployee>(); }
+        }
+
+
+        public BiddingProjectEmployeesRepository BiddingProjectEmployees
+        {
+            get { return (BiddingProjectEmployeesRepository)this.GetRepository<BiddingProjectEmployee>(); }
         }
 
         public QuestionsRepository Questions
@@ -92,9 +98,14 @@
                     typeOfRepository = typeof(MessagesRepository);
                 }
 
-                if (type.IsAssignableFrom(typeof(BiddingProjectEmployee)))
+                if (type.IsAssignableFrom(typeof(ProjectEmployee)))
                 {
                     typeOfRepository = typeof(ProjectEmployeesRepository);
+                }
+
+                if (type.IsAssignableFrom(typeof(BiddingProjectEmployee)))
+                {
+                    typeOfRepository = typeof(BiddingProjectEmployeesRepository);
                 }
 
                 if (type.IsAssignableFrom(typeof(Notification)))
