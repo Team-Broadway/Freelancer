@@ -1,13 +1,7 @@
 ﻿@using Microsoft.AspNet.Identity;
-@model IEnumerable<Freelancer.MVC.Models.ProjectViewModel>
 
 @{
     ViewBag.Title = "Projects";
-    string userId = "";
-    if (User.Identity.IsAuthenticated)
-    {
-        userId = User.Identity.GetUserId();
-    }
 }
 
 <div class="section-title">
@@ -17,137 +11,31 @@
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-<table class="table table-responsive" id="projects-table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Bids)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Skills)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.StartDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Price)
-            </th>
-            <th>
+<div id="projects-container">
 
-            </th>
-        </tr>
-    </thead>
-    @foreach (var item in Model)
-    {
-        <tr class="project-info">
-            <td>
-                @Html.ActionLink(item.Title, "Details", new { id = item.Id }, new { @class = "project-title" })
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Bids)
-            </td>
-            <td>
-                @String.Join(", ", item.Skills)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StartDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                @if (User.Identity.IsAuthenticated)
-                {
-                    var isFavorited = item.BookmarkedUsers.Any(u => u.Id == userId);
-                    string fill = isFavorited ? "yellow" : "gray";
-                    <div class="favorite-star" data-id="@item.Id">
-                        <svg height="21" width="21">
-                            <polygon points="10,1 4,19.8 19,7.8 1,7.8 16,19.8"
-                                     style="fill:@fill;stroke-width:0;fill-rule:nonzero;" />
-                        </svg>
-                        <div class="favorite-star-message">
+</div>
 
-                        </div>
-                    </div>
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                url: "Projects/List",
+                type: 'GET',
+                cache: false,
+                success: function (result) {
+                    $('#projects-container').html(result);
                 }
-            </td>
-        </tr>
-        <tr class="project-description">
-            <td colspan="6">
-                <div class="description-inner">
-                    <div class="description-text">@Html.DisplayFor(modelItem => item.Description)</div>
-                    <div class="bid-button">@Html.ActionLink("Bid", "Bid", "Projects", new { @class = "btn btn-primary" })</div>
-                </div>
-            </td>
-        </tr>
-    }
+            });
 
-</table>
-
-<script>
-    $(document).ready(function () {
-        $(".project-info").hover(function () {
-            $(this).next().css("display", "table-row");
-            $(this).css("background-color", "#CFBDA5");
-            $(this).next().css("background-color", "#CFBDA5");
-            $(this).next().children().css("border", "none");
-        }, function () {
-            if (!$(this).next().is(":hover")) {
-                $(this).css("background-color", "");
-                $(this).next().css("background-color", "");
-            }
-            $(this).next().css("display", "none");
-        })
-
-        $(".project-description").hover(function () {
-            $(this).css("background-color", "#CFBDA5");
-            $(this).prev().css("background-color", "#CFBDA5");
-            $(this).css("display", "table-row");
-            $(this).children().css("border", "none");
-        }, function () {
-            if (!$(this).prev().is(":hover")) {
-                $(this).css("background-color", "");
-                $(this).prev().css("background-color", "");
-            }
-            $(this).css("display", "none");
-        })
-
- 
-
-
-        $(".favorite-star").hover(function () {
-            var polygon = $(this).find("polygon");
-            polygon.data("fav-color", polygon.css("fill"));
-            polygon.css("fill", "skyblue");
-        }, function () {
-            $(this).find("polygon").css("fill", $(this).find("polygon").data("fav-color"));
-        })
-
-        $(".project-info").on("click", ".favorite-star", function () {
-            return function(){
-                var $this = $(this);
-                var id = $this.data("id");
+            $(document).on("click", ".pagination li a", function () {
                 $.ajax({
-                    type: "POST",
-                    url: "/Projects/Bookmark/" + id,
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: function (data, datatype) {
-                        if (data) {
-                            $this.find("polygon").css("fill", "yellow");
-                        } else {
-                            $this.find("polygon").css("fill", "gray");
-                        }
-                    },
-                    error: function (err) {
+                    url: $(this).attr("href"),
+                    type: 'GET',
+                    cache: false,
+                    success: function (result) {
+                        $('#projects-container').html(result);
                     }
                 });
-            }
-        }());
-
-
-    });
-</script>
+                return false;
+            });
+        });
+    </script>

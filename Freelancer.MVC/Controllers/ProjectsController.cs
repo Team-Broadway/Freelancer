@@ -8,6 +8,7 @@
     using System.Net;
     using System.Web;
     using System.Web.Mvc;
+    using PagedList;
     using Freelancer.Data;
     using Freelancer.Models;
     using Freelancer.Data.UnitOfWork;
@@ -15,9 +16,10 @@
     using Freelancer.MVC.Models;
     using AutoMapper;
 
+    [Authorize]
     public class ProjectsController : BaseController
     {
-
+        private const int pageSize = 3;
         public ProjectsController(IFreelancerData data)
             : base(data)
         {
@@ -27,22 +29,31 @@
         // GET: Projects
         public ActionResult Index()
         {
+            return View();
+        }
+
+        public ActionResult List(int? page)
+        {
+            if(!this.HttpContext.Request.IsAjaxRequest())
+            {
+                return RedirectToAction("Index");
+            }
+            int pageNumber = (page ?? 1);
+
             IEnumerable<ProjectViewModel> model;
 
-            var projects = this.Data.Projects.All().ToList();
+            var projects = this.Data.Projects.All().OrderByDescending(p => p.StartDate).ToList();
 
             Mapper.CreateMap<Project, ProjectViewModel>()
                 .ForMember(x => x.Bids, o => o.MapFrom(x => x.BiddingProjectEmployee.Count))
                 .ForMember(x => x.Skills, o => o.MapFrom(so => so.Skills.Select(t => t.Name).ToList()))
-                .ForMember(x => x.Price, o => o.MapFrom(s =>  s.StartPrice.ToString() + " - " + s.EndPrice.ToString() + " BGN"))
+                .ForMember(x => x.Price, o => o.MapFrom(s => s.StartPrice.ToString() + " - " + s.EndPrice.ToString() + " BGN"))
                 .ForMember(x => x.StartDate, o => o.MapFrom(s => s.StartDate.Date == DateTime.Now.Date ? "Today" : s.StartDate.ToShortDateString()));
-
 
             model = Mapper.Map<ICollection<Project>, IEnumerable<ProjectViewModel>>(projects);
 
-            return View(model);
+            return PartialView(model.ToPagedList(pageNumber, pageSize));
         }
-
         //[Authorize(Roles = "Admin")]
         //public ActionResult List()
         //{
@@ -51,9 +62,8 @@
         //}
 
      
-        public ActionResult Details(int? id,string bid)
+        public ActionResult Details(int? id)
         {
-
             ProjectDetailedViewModel model;
 
             Mapper.CreateMap<Project, ProjectDetailedViewModel>()
@@ -61,7 +71,7 @@
                .ForMember(x => x.Skills, o => o.MapFrom(so => so.Skills.Select(t => t.Name).ToList()))
                .ForMember(x => x.Price, o => o.MapFrom(s => s.StartPrice.ToString() + " - " + s.EndPrice.ToString() + " BGN"))
                .ForMember(x => x.StartDate, o => o.MapFrom(s => s.StartDate.Date == DateTime.Now.Date ? "Today" : s.StartDate.ToShortDateString()))
-               .ForMember(x => x.StartDate, o => o.MapFrom(s => s.DueDate.Date.ToShortDateString()));
+               .ForMember(x => x.DueDate, o => o.MapFrom(s => s.DueDate.Date.ToShortDateString()));
 
             if (id == null)
             {
@@ -70,11 +80,6 @@
 
             Project project = this.Data.Projects.Find(id);
             model = Mapper.Map<Project, ProjectDetailedViewModel>(project);
-
-            if (bid == "true")
-            {
-                model.BidMenuOpen = true;
-            }
 
             if (project == null)
             {
@@ -126,21 +131,6 @@
             return RedirectToAction("Index");
         }
 
-        // GET: Projects/Edit/5
-        //public ActionResult Edit(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    Project project = this.Data.Projects.Find(id);
-        //    if (project == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    return View(project);
-        //}
-
         // POST: Projects/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -158,21 +148,6 @@
             return View(project);
         }
 
-        // GET: Projects/Delete/5
-        //public ActionResult Delete(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    Project project = this.Data.Projects.Find(id);
-        //    if (project == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    return View(project);
-        //}
-
         // POST: Projects/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -186,7 +161,6 @@
         }
 
         [HttpPost]
-        [Authorize]
         [Route("bookmark/{id:int}")]
         public JsonResult Bookmark(int id)
         {
@@ -206,5 +180,24 @@
             this.Data.SaveChanges();
             return Json(result, JsonRequestBehavior.AllowGet);
         }
+
+   
+        public ActionResult BidMenu()
+        {
+              if(!this.HttpContext.Request.IsAjaxRequest())
+            {
+                return RedirectToAction("Index");
+            }
+            return this.PartialView(new BidModel());
+        }
+
+        //public ActionResult Bid(BidModel model)
+        //{
+        //    if(ModelState.IsValid)
+        //    {
+
+        //    }
+        //}
+
     }
 }

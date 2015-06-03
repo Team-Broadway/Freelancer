@@ -66,18 +66,6 @@ textarea {
     -webkit-overflow-scrolling:touch;
 }
 
-/*tbody > tr:hover, tr:hover + tr {
-    background-color:#CFBDA5;
-}*/
-
-/*.project-info ,.project-description{
-    background-color: #FFFFE9;
-}*/
-
-/*.project-info:hover + .project-description{
-    background-color:#CFBDA5;
-}*/
-
 .projects-title{
 
 }
@@ -118,4 +106,7 @@ textarea {
 }
 .btn-custom:hover{
       background-color: #f5a77d;
+}
+#bidding-section{
+    
 }

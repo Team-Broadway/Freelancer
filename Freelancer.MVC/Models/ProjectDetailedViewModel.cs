@@ -15,8 +15,6 @@ namespace Freelancer.MVC.Models
 
         public bool IsOpen { get; set; }
 
-        public bool BidMenuOpen { get; set; }
-
         [DisplayName("Due Date")]
         public string DueDate { get; set; }
     }

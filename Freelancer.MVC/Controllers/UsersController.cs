@@ -29,8 +29,6 @@
             }
 
             Mapper.CreateMap<User, UserViewModel>();
-            Mapper.CreateMap<Skill, SkillViewModel>();
-            
             var userViewModel = Mapper.Map<User, UserViewModel>(user);
 
             return this.View(userViewModel);

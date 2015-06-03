@@ -20,7 +20,11 @@ namespace Freelancer.Models
         public virtual Project Project { get; set; }
 
         public virtual User Employee { get; set; }
-        [Range(0,10000)]
+ 
         public int Bid { get; set; }
+
+        public DateTime BidDate { get; set; }
+
+        public int TimeInDays { get; set; }
     }
 }
