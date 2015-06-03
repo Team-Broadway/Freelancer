@@ -1,4 +1,6 @@
-﻿namespace Freelancer.MVC.Controllers
+using Freelancer.MVC.Models;
+
+namespace Freelancer.MVC.Controllers
 {
     using System;
     using System.Collections.Generic;
@@ -122,6 +124,21 @@
             Data.SaveChanges();
             this.AddNotification("Skill deleted successfully.", NotificationType.SUCCESS);
             return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public JsonResult Search()
+        {
+            var result = this.Data.Skills
+                .All()
+                .Select(x => new SkillViewModel
+                {
+                    Id = x.Id,
+                    Name = x.Name
+                })
+                .ToList();
+
+            return this.Json(result, JsonRequestBehavior.AllowGet);
         }
     }
 }
