@@ -7,8 +7,9 @@ namespace Freelancer.MVC.Models
     using System;
     using System.Linq.Expressions;
     using Freelancer.Models;
+    using Freelancer.Common.Mappings;
 
-    public class ProfileViewModel
+    public class ProfileViewModel //: IMapFrom<User>
     {
         public string Username { get; set; }
 

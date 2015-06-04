@@ -5,123 +5,74 @@
     ViewBag.Title = "Details";
     var displayMenu = this.ViewContext.RouteData.Values["bid"] == "true" ? "block" : "none";
 }
+<link rel="stylesheet" type="text/css" href="~/Content/jquery.raty.css" />
+<script src="~/Scripts/jquery.raty.js" type="text/javascript"></script>
 
-<div id="project-details">   
+<div id="project-details">  
+    <input type="hidden" value="@Model.Id" id="project-id" data-url="@Url.Action("LoadBidders","Projects")"/> 
     <hr />
-    <div class="container">
         <div class="row">
-                <div class="col-lg-9">
-                    <div class="row">
-                        @Html.DisplayNameFor(model => model.Title)
-                        @Html.DisplayFor(model => model.Title)
-                    </div>
-                    <div class="row">
-                        @Html.DisplayNameFor(model => model.Description)
-                        @Html.DisplayFor(model => model.Description)
-                    </div>
-                    <div class="row">
-                        @Html.DisplayNameFor(model => model.Price)
-                        @Html.DisplayFor(model => model.Price)
-                     </div>
-                    <div class="row">
-                        @Html.DisplayNameFor(model => model.DueDate)
-                        @Html.DisplayFor(model => model.DueDate)
-                    </div>
-                    <div class="row">
-                        @Html.DisplayNameFor(model => model.IsOpen)
-                        @Html.DisplayFor(model => model.IsOpen)
-                    </div>
-                        @if (Request.IsAuthenticated && Model.Employer.UserName == User.Identity.GetUserName())
-                        {
-                            @Html.ActionLink("Edit", "Edit", new { id = Model.Id })
-                            @Html.ActionLink("Delete", "Delete", new { id = Model.Id })
-                        }
-                    </div>
-   
-        <div class="col-lg-3">
-            <div id="bidding-section">
-                <div id="bid-menu" style="display:@displayMenu">
-
-                </div>
-                <a href='javascript:void(0)' id="show-bid-menu" class="btn btn-custom" data-url="@Url.Action("BidMenu","Projects")">
+            @Html.DisplayNameFor(model => model.Title)
+            @Html.DisplayFor(model => model.Title)
+        </div>
+        <div class="row">
+            @Html.DisplayNameFor(model => model.Description)
+            @Html.DisplayFor(model => model.Description)
+        </div>
+        <div class="row">
+            @Html.DisplayNameFor(model => model.Price)
+            @Html.DisplayFor(model => model.Price)
+            </div>
+        <div class="row">
+            @Html.DisplayNameFor(model => model.DueDate)
+            @Html.DisplayFor(model => model.DueDate)
+        </div>
+        <div class="row">
+            @Html.DisplayNameFor(model => model.IsOpen)
+            @Html.DisplayFor(model => model.IsOpen)
+        </div>
+        @if (Request.IsAuthenticated && Model.Employer.UserName == User.Identity.GetUserName())
+        {
+            <div>
+                @Html.ActionLink("Edit", "Edit", new { id = Model.Id })
+            </div>
+            <div>
+                @Html.ActionLink("Delete", "Delete", new { id = Model.Id })
+            </div>
+        }
+        <div class="row">
+            <div>
+                <a href='javascript:void(0)' id="show-bid-menu" class="btn btn-custom" data-url="@Url.Action("LoadBidMenu","Projects")" >
                     <span class="glyphicon glyphicon-arrow-up">Bid on this project</span>
                 </a>
             </div>
-         </div>
+            <div id="bid-menu" style="display:@displayMenu" class="col-lg-7 col-md-7">
+
+            </div>
         </div>
     </div>
 
-
+<div id="bidders-table-container">
     <table class="table" id="bidders-table">
         <thead>
             <tr>
-                <th>
-                    Freelancers bidding
-                </th>
-                <th>
-                    Reputation
-                </th>
-                <th>
-                    Bid
-                </th>
+                <th>Freelancers bidding</th>
+                <th>Reputation</th>
+                <th>Bid</th>
+                <th></th>
             </tr>
         </thead>
-        @foreach (var bidder in Model.BiddingProjectEmployee)
-        {
+        <tbody>
             <tr>
-                <td>
-                    <div class="row">
-                        <div class="col-lg-9">
-                            <img src="@bidder.Employee.AvatarUrl" width="150" />
-                        </div>
-                        <div class="col-lg-3">
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    @Html.ActionLink(@bidder.Employee.UserName, "User", "User")
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-12">
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <td colspan="3">
+                    <img src="~/Content/Images/ajax-loader.gif"/>
                 </td>
-                <td></td>
-                <td></td>
             </tr>
-        }
-    </table>
-
+        </tbody>
+   </table>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
     @Html.ActionLink("Back to List", "Index")
 </p>
-<script>
-    $(document).ready(function () {
-        var bidMenuButton = $("#show-bid-menu");
 
-        $.ajax({
-            url: bidMenuButton.attr("data-url"),
-            type: 'GET',
-            cache: false,
-            success: function (result) {
-                $('#bid-menu').html(result);
-            }
-        });
-
-        bidMenuButton.click(function () {
-            if ($("#bid-menu").css("display") == "none") {
-                $("#bid-menu").css("display", "block");
-                $(this).find("span").text("Hide");
-                $(this).find("span").attr("class", "glyphicon glyphicon-arrow-down");
-            } else {
-                $("#bid-menu").css("display", "none")
-                $(this).find("span").text("Bid on this project");
-                $(this).find("span").attr("class","glyphicon glyphicon-arrow-up");
-            }
-        });
-    })
-</script>
+<script src="~/Scripts/project-details.js" type="text/javascript"></script>

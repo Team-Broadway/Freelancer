@@ -46,6 +46,15 @@
     <Reference Include="AutoMapper.Net4">
       <HintPath>..\packages\AutoMapper.3.3.1\lib\net40\AutoMapper.Net4.dll</HintPath>
     </Reference>
+    <Reference Include="Glimpse.AspNet">
+      <HintPath>..\packages\Glimpse.AspNet.1.8.0\lib\net45\Glimpse.AspNet.dll</HintPath>
+    </Reference>
+    <Reference Include="Glimpse.Core">
+      <HintPath>..\packages\Glimpse.1.8.2\lib\net45\Glimpse.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Glimpse.Mvc5">
+      <HintPath>..\packages\Glimpse.Mvc5.1.5.3\lib\net45\Glimpse.Mvc5.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.Core">
       <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.2.0\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
       <Private>True</Private>
@@ -188,6 +197,7 @@
     <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Areas\Administration\AdministrationAreaRegistration.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -196,12 +206,14 @@
     <Compile Include="Controllers\SkillsController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Extensions\NotificationExtensions.cs" />
+    <Compile Include="GlimpseSecurityPolicy.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Hubs\ProjectsHub.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\BidderViewModel.cs" />
     <Compile Include="Models\BidModel.cs" />
-    <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\ProfileViewModel.cs" />
     <Compile Include="Models\ProjectCreateModel.cs" />
@@ -215,13 +227,26 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Images\ajax-loader.gif" />
+    <Content Include="Content\jquery.raty.css" />
     <Content Include="Content\PagedList.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="fonts\raty.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Content\Images\cancel-off.png" />
+    <Content Include="Content\Images\cancel-on.png" />
+    <Content Include="Content\Images\star-half.png" />
+    <Content Include="Content\Images\star-off.png" />
+    <Content Include="Content\Images\star-on.png" />
+    <Content Include="Scripts\jquery.raty.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Areas\Administration\Views\web.config" />
+    <Content Include="fonts\raty.eot" />
+    <Content Include="fonts\raty.ttf" />
+    <Content Include="fonts\raty.woff" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -235,6 +260,10 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\project-details.js" />
+    <Content Include="Scripts\project-index.js" />
+    <Content Include="Scripts\project-list.js" />
+    <Content Include="Scripts\project-signalr.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
@@ -286,11 +315,17 @@
     <Content Include="Views\Shared\_Notifications.cshtml" />
     <Content Include="Views\Users\Index.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\SkillViewModel.cshtml" />
-    <Content Include="Views\Projects\List.cshtml" />
-    <Content Include="Views\Projects\BidMenu.cshtml" />
+    <Content Include="Views\Projects\_ProjectList.cshtml" />
+    <Content Include="Views\Projects\_BidMenu.cshtml" />
+    <Content Include="Views\Projects\_BidderList.cshtml" />
+    <Content Include="Views\Skills\_SkillsList.cshtml" />
+    <Content Include="Views\Projects\_ProjectRow.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Areas\Administration\Controllers\" />
+    <Folder Include="Areas\Administration\Models\" />
+    <Folder Include="Areas\Administration\Views\Shared\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -300,6 +335,10 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Common\Freelancer.Common.csproj">
+      <Project>{8f866201-6df3-47e8-9ebc-939bbe9fd57e}</Project>
+      <Name>Freelancer.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Freelancer.Data\Freelancer.Data.csproj">
       <Project>{3d3acf69-9b8f-4644-a55f-34300a323aee}</Project>
       <Name>Freelancer.Data</Name>

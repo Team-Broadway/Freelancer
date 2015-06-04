@@ -1,4 +1,5 @@
-﻿using Freelancer.Models;
+﻿using Freelancer.Common.Mappings;
+using Freelancer.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -7,7 +8,7 @@ using System.Web;
 
 namespace Freelancer.MVC.Models
 {
-    public class ProjectViewModel
+    public class ProjectViewModel //: IMapFrom<Project>
     {
         public int Id { get; set; }
 

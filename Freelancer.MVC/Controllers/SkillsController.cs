@@ -1,6 +1,4 @@
-using Freelancer.MVC.Models;
-
-namespace Freelancer.MVC.Controllers
+﻿namespace Freelancer.MVC.Controllers
 {
     using System;
     using System.Collections.Generic;
@@ -14,6 +12,8 @@ namespace Freelancer.MVC.Controllers
     using Freelancer.Models;
     using Freelancer.Data.UnitOfWork;
     using Freelancer.MVC.Extensions;
+    using AutoMapper;
+    using Freelancer.MVC.Models;
     public class SkillsController : BaseController
     {
         
@@ -126,19 +126,18 @@ namespace Freelancer.MVC.Controllers
             return RedirectToAction("Index");
         }
 
-        [HttpGet]
-        public JsonResult Search()
+        public ActionResult LoadSkills()
         {
-            var result = this.Data.Skills
-                .All()
-                .Select(x => new SkillViewModel
-                {
-                    Id = x.Id,
-                    Name = x.Name
-                })
-                .ToList();
+            if (!this.HttpContext.Request.IsAjaxRequest())
+            {
+                return RedirectToAction("Index");
+            }
+            var skills = this.Data.Skills.All().Take(30).ToList();
+            Mapper.CreateMap<Skill, SkillViewModel>();
+            var skillsModel = Mapper.Map<ICollection<Skill>, IEnumerable<SkillViewModel>>(skills);
 
-            return this.Json(result, JsonRequestBehavior.AllowGet);
+            return this.PartialView("_SkillsList", skillsModel);
         }
+
     }
 }

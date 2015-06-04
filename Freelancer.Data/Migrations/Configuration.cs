@@ -7059,7 +7059,7 @@ namespace Freelancer.Data.Migrations
             RoleManager.Create(new IdentityRole("Administrator"));
             RoleManager.Create(new IdentityRole("Moderator"));
             RoleManager.Create(new IdentityRole("User"));
-        
+
             var questionAboutDOTNET = new Question
             {
                 QuestionTitle = "Date of .NET Exam?"
@@ -7099,7 +7099,7 @@ namespace Freelancer.Data.Migrations
                 // DOTNETExam.Employees.Add(kiborkUser);
                 // kiborkUser.Skills.Add(dotNETSkill);
             }
-          
+
             context.SaveChanges();
         }
     }

@@ -7,7 +7,7 @@ using System.Web;
 
 namespace Freelancer.MVC.Models
 {
-    public class ProjectDetailedViewModel : ProjectViewModel
+    public class ProjectDetailedViewModel : ProjectViewModel 
     {
         public ICollection<BiddingProjectEmployee> BiddingProjectEmployee { get; set; }
 

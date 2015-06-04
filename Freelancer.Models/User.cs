@@ -92,6 +92,5 @@ namespace Freelancer.Models
         }
 
 
-
     }
 }

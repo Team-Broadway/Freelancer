@@ -56,7 +56,7 @@ textarea {
     padding-bottom:7px;
 }
 
-.skillsList{
+#skillsList{
     background-color:white;
     height:150px;
     width:150px;
@@ -110,6 +110,13 @@ textarea {
 #bidding-section{
     
 }
-.margintop{
-    margin-top: 45px;
+.bidders-table-container{
+    margin-top:10px;
+}
+.col-centered{
+    float: none;
+    margin: 0 auto;
+}
+#bidders-table tr:nth-child(even) {
+    background-color:#FFFFD5;
 }

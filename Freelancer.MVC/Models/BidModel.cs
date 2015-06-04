@@ -7,14 +7,15 @@ using System.Web;
 
 namespace Freelancer.MVC.Models
 {
-    public class BidModel
+    public class BidModel 
     {
+        public int ProjectId { get; set; }
+
         [Range(0,10000)]
-        [DisplayName("Bid")]
-        public int Price { get; set; }
+        public int Bid { get; set; }
 
         [Range(0, 10000)]
-        [DisplayName("Deliver in")]
-        public int Days { get; set; }
+        [DisplayName("Delivery")]
+        public int TimeInDays { get; set; }
     }
 }

@@ -17,6 +17,7 @@ namespace Freelancer.MVC.Controllers
     [Authorize]
     public class AccountController : Controller
     {
+        private const string defaultAvatarUrl = "http://img1.wikia.nocookie.net/__cb20120617160957/caw/images/3/38/Mystery_man_default_avatar_150x150.png";
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
 
@@ -154,7 +155,7 @@ namespace Freelancer.MVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Username, Email = model.Email };
+                var user = new User { UserName = model.Username, Email = model.Email, AvatarUrl = defaultAvatarUrl };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -371,7 +372,7 @@ namespace Freelancer.MVC.Controllers
                 {
                     return View("ExternalLoginFailure");
                 }
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new User { UserName = model.Email, Email = model.Email};
                 var result = await UserManager.CreateAsync(user);
                 if (result.Succeeded)
                 {

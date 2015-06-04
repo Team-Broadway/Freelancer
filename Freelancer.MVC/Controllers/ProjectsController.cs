@@ -15,56 +15,24 @@
     using Freelancer.MVC.Extensions;
     using Freelancer.MVC.Models;
     using AutoMapper;
+    using Microsoft.AspNet.SignalR;
+    using Twitter.MVC.Hubs;
 
-    using Microsoft.AspNet.Identity;
-
-    [Authorize]
+    [System.Web.Mvc.Authorize]
     public class ProjectsController : BaseController
     {
-        private const int pageSize = 3;
+        private const int pageSize = 10;
         public ProjectsController(IFreelancerData data)
             : base(data)
         {
         }
 
-
-        // GET: Projects
         public ActionResult Index()
         {
             return View();
         }
 
-        public ActionResult List(int? page)
-        {
-            if (!this.HttpContext.Request.IsAjaxRequest())
-            {
-                return RedirectToAction("Index");
-            }
-            int pageNumber = (page ?? 1);
-
-            IEnumerable<ProjectViewModel> model;
-
-            var projects = this.Data.Projects.All().OrderByDescending(p => p.StartDate).ToList();
-
-            Mapper.CreateMap<Project, ProjectViewModel>()
-                .ForMember(x => x.Bids, o => o.MapFrom(x => x.BiddingProjectEmployee.Count))
-                .ForMember(x => x.Skills, o => o.MapFrom(so => so.Skills.Select(t => t.Name).ToList()))
-                .ForMember(x => x.Price, o => o.MapFrom(s => s.StartPrice.ToString() + " - " + s.EndPrice.ToString() + " BGN"))
-                .ForMember(x => x.StartDate, o => o.MapFrom(s => s.StartDate.Date == DateTime.Now.Date ? "Today" : s.StartDate.ToShortDateString()));
-
-            model = Mapper.Map<ICollection<Project>, IEnumerable<ProjectViewModel>>(projects);
-
-            return PartialView(model.ToPagedList(pageNumber, pageSize));
-        }
-        //[Authorize(Roles = "Admin")]
-        //public ActionResult List()
-        //{
-        //    return View(this.Data.Projects.All().ToList());
-
-        //}
-
-
-        public ActionResult Details(int? id)
+        public ActionResult Details(int? id,string bid)
         {
             ProjectDetailedViewModel model;
 
@@ -90,41 +58,36 @@
             return View(model);
         }
 
-        [Authorize(Roles = "Admin")]
-        public ActionResult DetailsForAdmin(int id)
-        {
-            Project project = this.Data.Projects.Find(id);
-            return View("Details", project);
-        }
-
-        // GET: Projects/Create
         public ActionResult Create()
         {
-            var skills = this.Data.Skills.All().ToList();
-            return View(skills);
+            return View();
         }
 
-        // POST: Projects/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Title,Description,StartPrice,EndPrice,DueDate")] Project project, HashSet<string> SelectedSkills)
+        public ActionResult Create(ProjectCreateModel project, HashSet<string> SelectedSkills)
         {
-            if (ModelState.IsValid && project.StartPrice <= project.EndPrice)
+            if (ModelState.IsValid && project.StartPrice <= project.EndPrice 
+                && project.DueDate.Date >= DateTime.Now.Date)
             {
-                project.Employer = this.UserProfile;
-                project.StartDate = DateTime.Now;
+                Mapper.CreateMap<ProjectCreateModel, Project>();
+                Project newProject = Mapper.Map<ProjectCreateModel, Project>(project);
+
+                newProject.Employer = this.UserProfile;
+                newProject.StartDate = DateTime.Now;
+
                 if (SelectedSkills != null)
                 {
                     foreach (string skill in SelectedSkills)
                     {
-                        project.Skills.Add(this.Data.Skills.Find(Int32.Parse(skill)));
+                        newProject.Skills.Add(this.Data.Skills.Find(Int32.Parse(skill)));
                     }
                 }
-                this.Data.Projects.Add(project);
+                this.Data.Projects.Add(newProject);
                 this.Data.SaveChanges();
                 this.AddNotification("Project created.", NotificationType.SUCCESS);
+                var myHub = GlobalHost.ConnectionManager.GetHubContext<ProjectsHub>();
+                myHub.Clients.All.addProjectsHubMessage(newProject.Id);
             }
             else
             {
@@ -133,9 +96,6 @@
             return RedirectToAction("Index");
         }
 
-        // POST: Projects/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,Title,Description,StartPrice,EndPrice,DueDate,IsOpen,MaxExperience")] Project project)
@@ -150,7 +110,6 @@
             return View(project);
         }
 
-        // POST: Projects/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
@@ -168,7 +127,7 @@
         {
             var project = this.Data.Projects.Find(id);
             bool result;
-            if (UserProfile.BookmarkedProjects.Any(p => p.Id == id))
+            if(UserProfile.BookmarkedProjects.Any(p => p.Id == id))
             {
                 UserProfile.BookmarkedProjects.Remove(project);
                 result = false;
@@ -178,35 +137,123 @@
                 UserProfile.BookmarkedProjects.Add(project);
                 result = true;
             }
-
+            
             this.Data.SaveChanges();
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
-
-        public ActionResult BidMenu()
+        //Ajax only
+        public ActionResult List(int? page)
         {
             if (!this.HttpContext.Request.IsAjaxRequest())
             {
                 return RedirectToAction("Index");
             }
-            return this.PartialView(new BidModel());
+            int pageNumber = (page ?? 1);
+
+            IEnumerable<ProjectViewModel> model;
+
+            var projects = this.Data.Projects.All().OrderByDescending(p => p.StartDate).ToList();
+
+            Mapper.CreateMap<Project, ProjectViewModel>()
+                .ForMember(x => x.Bids, o => o.MapFrom(x => x.BiddingProjectEmployee.Count))
+                .ForMember(x => x.Skills, o => o.MapFrom(so => so.Skills.Select(t => t.Name).ToList()))
+                .ForMember(x => x.Price, o => o.MapFrom(s => s.StartPrice.ToString() + " - " + s.EndPrice.ToString() + " BGN"))
+                .ForMember(x => x.StartDate, o => o.MapFrom(s => s.StartDate.Date == DateTime.Now.Date ? "Today" : s.StartDate.ToShortDateString()));
+
+            model = Mapper.Map<ICollection<Project>, IEnumerable<ProjectViewModel>>(projects);
+
+            return PartialView("_ProjectList", model.ToPagedList(pageNumber, pageSize));
         }
 
-        //public ActionResult Bid(BidModel model)
-        //{
-        //    if(ModelState.IsValid)
-        //    {
-
-        //    }
-        //}
-
-        public ActionResult My()
+        //Ajax only
+        public ActionResult LoadBidMenu(int projectId)
         {
-            string currentUserId = this.User.Identity.GetUserId();
-            var projects = this.Data.ProjectEmployees.All().Where(p => p.EmployeeId == currentUserId).ToList();
-            
-            return this.View();
+            if(!this.HttpContext.Request.IsAjaxRequest())
+            {
+                return RedirectToAction("Index");
+            }
+            return this.PartialView("_BidMenu", new BidModel { ProjectId = projectId });
+        }
+
+        //Ajax only
+        public ActionResult LoadBidders(int projectId)
+        {
+            if (!this.HttpContext.Request.IsAjaxRequest())
+            {
+                return RedirectToAction("Index");
+            }
+
+            var bpe = this.Data.BiddingProjectEmployees.All()
+                .Where(b => b.ProjectId == projectId)
+                .OrderByDescending(b => b.BidDate)
+                .ToList();
+
+            Mapper.CreateMap<BiddingProjectEmployee, BidderViewModel>()
+                .ForMember(u => u.Reviews, a => a.MapFrom(c => c.Employee.Reviews.Count()))
+                .ForMember(u => u.Rating, a => a.MapFrom(c => c.Employee.Reviews.Count() == 0 ?
+                    0 : (c.Employee.Reviews.Select(r => r.Rating).Sum() / c.Employee.Reviews.Count())))
+                .ForMember(u => u.UserName, a => a.MapFrom(c => c.Employee.UserName))
+                .ForMember(u => u.UserId, a => a.MapFrom(c => c.Employee.Id))
+                .ForMember(u => u.AvatarUrl, a => a.MapFrom(c => c.Employee.AvatarUrl));
+
+            var model = Mapper.Map<ICollection<BiddingProjectEmployee>, IEnumerable<BidderViewModel>>(bpe);
+            return this.PartialView("_BidderList", model);
+        }
+
+        //Ajax only
+        public ActionResult ProjectRowPartial(int id)
+        {
+            if (!this.HttpContext.Request.IsAjaxRequest())
+            {
+                return RedirectToAction("Index");
+            }
+
+            Project project = this.Data.Projects.Find(id);
+
+            Mapper.CreateMap<Project, ProjectViewModel>()
+            .ForMember(x => x.Bids, o => o.MapFrom(x => x.BiddingProjectEmployee.Count))
+            .ForMember(x => x.Skills, o => o.MapFrom(so => so.Skills.Select(t => t.Name).ToList()))
+            .ForMember(x => x.Price, o => o.MapFrom(s => s.StartPrice.ToString() + " - " + s.EndPrice.ToString() + " BGN"))
+            .ForMember(x => x.StartDate, o => o.MapFrom(s => s.StartDate.Date == DateTime.Now.Date ? "Today" : s.StartDate.ToShortDateString()));
+
+            ProjectViewModel model = Mapper.Map<Project, ProjectViewModel>(project);
+
+            return this.PartialView("_ProjectRow", model);
+        }
+
+        [ValidateAntiForgeryToken]
+        public ActionResult Bid(BidModel model)
+        {
+            var project = this.Data.Projects.Find(model.ProjectId);
+            if(project.Employer.Id == UserProfile.Id)
+            {
+                this.AddNotification("You cannot bid on your own project", NotificationType.ERROR);
+                return RedirectToAction("Details", new { id = model.ProjectId });
+            }
+
+            if (project.BiddingProjectEmployee.Any(b => b.Employee.Id == UserProfile.Id))
+            {
+                this.AddNotification("You have already bid on this project", NotificationType.ERROR);
+                return RedirectToAction("Details", new { id = model.ProjectId });
+            }
+
+            if (ModelState.IsValid)
+            {
+                Mapper.CreateMap<BidModel, BiddingProjectEmployee>();
+                BiddingProjectEmployee bpe = Mapper.Map<BidModel, BiddingProjectEmployee>(model);
+                bpe.BidDate = DateTime.Now;
+                bpe.EmployeeId = UserProfile.Id;
+
+                this.Data.BiddingProjectEmployees.Add(bpe);
+                this.Data.SaveChanges();
+                this.AddNotification("Successfully bid", NotificationType.SUCCESS);
+            }
+            else
+            {
+                this.AddNotification("Error bidding", NotificationType.ERROR);
+            }
+            return RedirectToAction("Details", new { id = model.ProjectId });
         }
 
     }
