@@ -1,0 +1,38 @@
+﻿@using Microsoft.AspNet.Identity;
+@using PagedList;
+@using PagedList.Mvc;
+
+@model IPagedList<Freelancer.MVC.Models.ProjectViewModel>
+@{
+    ViewBag.Title = "List";
+    string userId = "";
+    if (User.Identity.IsAuthenticated)
+    {
+        userId = User.Identity.GetUserId();
+    }
+}
+
+<table class="table table-responsive" id="projects-table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Bids</th>
+            <th>Skills</th>
+            <th>Started</th>
+            <th>Price</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            Html.RenderPartial("_ProjectRow", item);
+        }
+    </tbody>
+</table>
+    <div id="contentPager">
+        @Html.PagedListPager(Model, page => Url.Action("List", new { page }))
+    </div>
+
+<script src="~/Scripts/project-list.js" type="text/javascript"></script>
+

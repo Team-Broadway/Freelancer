@@ -35,25 +35,6 @@ namespace Freelancer.Data
                 map.MapRightKey("SkillId");
             });
 
-          //  modelBuilder.Entity<User>()
-          //.HasMany(x => x.BiddingProjects)
-          //.WithMany(x => x.BiddingEmployees)
-          // .Map(map =>
-          // {
-          //     map.ToTable("BiddingProjectEmployee");
-          //     map.MapLeftKey("ProjectId");
-          //     map.MapRightKey("EmployeeId");
-          // });
-
-         //   modelBuilder.Entity<User>()
-         //.HasMany(x => x.StartedProjects)
-         //.WithMany(x => x.Employees)
-         // .Map(map =>
-         // {
-         //     map.ToTable("StartedProjectEmployee");
-         //     map.MapLeftKey("ProjectId");
-         //     map.MapRightKey("EmployeeId");
-         // });
 
             modelBuilder.Entity<User>()
          .HasMany(x => x.BookmarkedProjects)

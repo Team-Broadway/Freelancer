@@ -1,0 +1,41 @@
+﻿@model IEnumerable<Freelancer.MVC.Models.BidderViewModel>
+    @foreach (var bidder in Model)
+    {
+        <tr>
+            <td>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <img src="@bidder.AvatarUrl" width="100" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-1 col-lg-1 col-sm-offset-1 col-lg-offset-1">
+                        @Html.ActionLink(@bidder.UserName, "User", "User")
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="rating" data-rating="@bidder.Rating"></div>
+                <div class="reviews"><span>@bidder.Reviews Reviews </span></div>
+            </td>
+            <td>
+                <div class="bid">
+                    <span>@bidder.Bid BGN in @bidder.TimeInDays days</span>
+                </div>
+            </td>
+            <td>
+                @if (User.Identity.IsAuthenticated && bidder.UserName != User.Identity.Name)
+                {
+                    
+                }
+            </td>
+        </tr>
+    }
+<script>
+    $(".rating").raty(
+        {
+            readOnly: true,
+            score: parseInt($(this).attr("data-rating"))       
+        }
+     )
+</script>

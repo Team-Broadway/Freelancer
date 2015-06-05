@@ -1,0 +1,47 @@
+﻿@using Microsoft.AspNet.Identity;
+@model Freelancer.MVC.Models.ProjectViewModel
+<tr class="project-info">
+    <td>
+        @Html.ActionLink(Model.Title, "Details", new { id = Model.Id }, new { @class = "project-title" })
+    </td>
+    <td>
+        @Html.DisplayFor(m => Model.Bids)
+    </td>
+    <td>
+        @String.Join(", ", Model.Skills)
+    </td>
+    <td>
+        @Html.DisplayFor(m => Model.StartDate)
+    </td>
+    <td>
+        @Html.DisplayFor(m => Model.Price)
+    </td>
+    <td>
+        @if (User.Identity.IsAuthenticated)
+        {
+            var isFavorited = Model.BookmarkedUsers.Any(u => u.Id == User.Identity.GetUserId());
+            string fill = isFavorited ? "yellow" : "gray";
+            <div class="favorite-star" data-id="@Model.Id">
+                <svg height="21" width="21">
+                    <polygon points="10,1 4,19.8 19,7.8 1,7.8 16,19.8"
+                             style="fill:@fill;stroke-width:0;fill-rule:nonzero;" />
+                </svg>
+                <div class="favorite-star-message">
+
+                </div>
+            </div>
+        }
+    </td>
+</tr>
+<tr class="project-description">
+    <td colspan="6">
+        <div class="description-inner">
+            <div class="description-text">@Html.DisplayFor(modelModel => Model.Description)</div>
+            <div class="bid-button">
+                <a href="@Url.Action("Details", "Projects", new { id = Model.Id, bid = "true" })" class="btn btn-primary">
+                    Bid
+                </a>
+            </div>
+        </div>
+    </td>
+</tr>

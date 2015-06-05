@@ -1,0 +1,10 @@
+﻿@model IEnumerable<Freelancer.MVC.Models.SkillViewModel>
+
+@foreach (var skill in Model)
+{
+    <div class="row">
+        <div class="col-xs-10">
+            <input type="checkbox" name="SelectedSkills" value="@skill.Id"> @skill.Name
+        </div>
+    </div>
+}
